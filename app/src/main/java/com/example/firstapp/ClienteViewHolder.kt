@@ -14,5 +14,6 @@ class ClienteViewHolder(view:View) : RecyclerView.ViewHolder(view) {
         nombre.text = clienteModel.nombre
         paterno.text = clienteModel.apellidoPaterno
         materno.text = clienteModel.apellidoMaterno
+
     }
 }
