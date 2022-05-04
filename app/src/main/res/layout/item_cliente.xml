@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/imgCliente"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:background="@color/black"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/txtNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Luis Ricard"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imgCliente"
+        android:layout_marginTop="10dp"
+        android:textSize="25sp"
+
+        />
+
+    <TextView
+        android:id="@+id/txtPaterno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Genovez"
+        app:layout_constraintTop_toBottomOf="@id/txtNombre"
+        app:layout_constraintStart_toEndOf="@id/imgCliente"
+        android:layout_marginTop="3dp"
+
+        />
+
+    <TextView
+        android:id="@+id/txtMaterno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Genovez"
+        app:layout_constraintTop_toBottomOf="@id/txtPaterno"
+        app:layout_constraintStart_toEndOf="@id/imgCliente"
+        android:layout_marginTop="3dp"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

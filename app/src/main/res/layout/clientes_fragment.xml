@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstrainView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E47575"
+    tools:context=".ClientesFragment">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginBottom="61dp"
+        android:text="@string/valueTextHelloWorld"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <WebView
+        android:id="@+id/webview1"
+        android:layout_width="421dp"
+        android:layout_height="639dp"
+
+        android:layout_marginTop="80dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
