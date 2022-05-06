@@ -1,17 +1,18 @@
 package com.example.firstapp
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
+import com.example.firstapp.clientes.ClienteComunicator
 import com.example.firstapp.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ClienteComunicator {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -54,5 +55,24 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    override fun passDataCliente(nombreCliente: String) {
+        var bundle = Bundle()
+
+        bundle.putString("nombre_txt", nombreCliente)
+
+        Bundle().putString("nombre_txt", nombreCliente)
+
+
+        findNavController(R.id.nav_host_fragment_content_main)
+            .navigate(R.id.action_FirstFragment_to_ClientesInfoFragment, bundle)
+
+
+        /*
+        transaction.replace(R.id.layout_app_cliente, frag_Cliente)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()*/
     }
 }

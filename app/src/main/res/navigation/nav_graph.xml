@@ -18,6 +18,11 @@
         <action
             android:id="@+id/action_FirstFragment_to_ClientesFragment"
             app:destination="@id/ClientesFragment" />
+
+        <action
+            android:id="@+id/action_FirstFragment_to_ClientesInfoFragment"
+            app:destination="@+id/ClienteInfoFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -38,6 +43,19 @@
 
         <action
             android:id="@+id/action__ClientesFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ClienteInfoFragment"
+        android:name="com.example.firstapp.clientes.ClienteInfoFragment"
+        android:label="Informacion"
+        tools:layout="@layout/fragment_cliente_info"
+        >
+
+        <action
+            android:id="@+id/action_ClienteInfo_to_FirstFragment"
             app:destination="@id/FirstFragment" />
 
     </fragment>

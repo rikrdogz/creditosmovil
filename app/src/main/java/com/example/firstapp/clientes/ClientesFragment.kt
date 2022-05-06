@@ -1,13 +1,13 @@
 package com.example.firstapp.clientes
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.firstapp.R
 import com.example.firstapp.databinding.ClientesFragmentBinding
 
@@ -49,6 +49,7 @@ class ClientesFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ClientesViewModel::class.java)
 
         val web1 = view.findViewById<WebView>(R.id.webview1)
+
 
         //navegar dentro del webcliente local
         web1.webViewClient = WebViewClient()

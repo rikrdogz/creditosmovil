@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firstapp.clientes.ApiCreditoService
+import com.example.firstapp.clientes.ClienteComunicator
 import com.example.firstapp.clientes.ClienteModel
 import com.example.firstapp.clientes.ClientesAdapter
 import com.example.firstapp.databinding.FragmentFirstBinding
@@ -30,6 +31,9 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    //Comunicador
+    private  lateinit var commCliente: ClienteComunicator
+
     private lateinit var adapterClientes: ClientesAdapter
     private var listaCLientesMuteable =  mutableListOf<ClienteModel>()
 
@@ -38,6 +42,8 @@ class FirstFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+
+        commCliente =requireActivity() as ClienteComunicator
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
@@ -65,7 +71,7 @@ class FirstFragment : Fragment() {
     }
 
     fun onClienteClick(position: Int) {
-
+        commCliente.passDataCliente(listaCLientesMuteable[position].nombre)
         Toast.makeText(context, listaCLientesMuteable[position].nombre, Toast.LENGTH_SHORT).show()
 
     }
