@@ -13,4 +13,7 @@
     <string name="valueTextHelloWorld">Hola Mundo</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="abonar">Abonar</string>
+    <string name="monto_a_depositar">Monto A Depositar</string>
+    <string name="fecha_del_abono">Fecha del Abono</string>
 </resources>
