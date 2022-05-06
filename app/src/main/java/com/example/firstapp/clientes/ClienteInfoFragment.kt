@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.firstapp.R
@@ -51,10 +52,23 @@ class ClienteInfoFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.txtNombre).text = inputNombre.orEmpty()
 
+        view.findViewById<EditText>(R.id.txtFecha).setOnClickListener { showModalFecha() }
+
 
         super.onViewCreated(view, savedInstanceState)
 
 
+
+    }
+
+    private fun showModalFecha(){
+        val datePicker = FechaDateTimePicker{day, month, year -> onDateSelected(day, month, year) }
+        datePicker.show(parentFragmentManager, "datePicker")
+
+    }
+
+    private fun onDateSelected(day: Int, month: Int, year: Int) {
+        view?.findViewById<EditText>(R.id.txtFecha)?.setText("$day/$month/$year")
 
     }
 

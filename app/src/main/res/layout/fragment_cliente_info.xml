@@ -62,7 +62,7 @@
 
             />
 
-        <DatePicker
+        <EditText
             android:id="@+id/txtFecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,6 +73,8 @@
             android:calendarViewShown="false"
             android:startYear="2022"
             android:background="@color/field_text"
+            android:clickable="false"
+            android:focusable="false"
             app:layout_constraintTop_toBottomOf="@id/labelFecha"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
