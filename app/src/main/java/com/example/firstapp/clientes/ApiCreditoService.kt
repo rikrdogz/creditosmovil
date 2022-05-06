@@ -1,4 +1,4 @@
-package com.example.firstapp
+package com.example.firstapp.clientes
 
 import retrofit2.Response
 import retrofit2.http.GET

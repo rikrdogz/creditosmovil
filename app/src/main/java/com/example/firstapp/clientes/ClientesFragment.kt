@@ -1,4 +1,4 @@
-package com.example.firstapp
+package com.example.firstapp.clientes
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.viewbinding.ViewBindings
+import com.example.firstapp.R
 import com.example.firstapp.databinding.ClientesFragmentBinding
 
 class ClientesFragment : Fragment() {

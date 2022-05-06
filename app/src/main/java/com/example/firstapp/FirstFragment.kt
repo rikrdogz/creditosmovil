@@ -9,6 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.firstapp.clientes.ApiCreditoService
+import com.example.firstapp.clientes.ClienteModel
+import com.example.firstapp.clientes.ClientesAdapter
 import com.example.firstapp.databinding.FragmentFirstBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +47,7 @@ class FirstFragment : Fragment() {
     fun iniciar(view: View) {
         val rview = view.findViewById<RecyclerView>(R.id.rc_list)
 
-        adapterClientes = ClientesAdapter(listaCLientesMuteable) //listaCLientesMuteable
+        adapterClientes = ClientesAdapter(listaCLientesMuteable) { position -> onClienteClick(position)} //listaCLientesMuteable
 
         rview.layoutManager = LinearLayoutManager(context)
         rview.adapter = adapterClientes
@@ -59,6 +62,12 @@ class FirstFragment : Fragment() {
         return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    fun onClienteClick(position: Int) {
+
+        Toast.makeText(context, listaCLientesMuteable[position].nombre, Toast.LENGTH_SHORT).show()
+
     }
 
     fun ObtenerClientes() {

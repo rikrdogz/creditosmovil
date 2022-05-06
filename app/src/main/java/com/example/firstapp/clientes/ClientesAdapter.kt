@@ -1,14 +1,15 @@
-package com.example.firstapp
+package com.example.firstapp.clientes
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.firstapp.R
 
-class ClientesAdapter(val listaClientes:List<ClienteModel>) : RecyclerView.Adapter<ClienteViewHolder>() {
+class ClientesAdapter(val listaClientes:List<ClienteModel>, private val onItemClick: (position:Int) -> Unit ) : RecyclerView.Adapter<ClienteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClienteViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return ClienteViewHolder(layoutInflater.inflate(R.layout.item_cliente, parent, false))
+        return ClienteViewHolder(layoutInflater.inflate(R.layout.item_cliente, parent, false), onItemClick)
     }
 
     override fun onBindViewHolder(holder: ClienteViewHolder, position: Int) {

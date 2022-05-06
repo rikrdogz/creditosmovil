@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/ClientesFragment"
-        android:name="com.example.firstapp.ClientesFragment"
+        android:name="com.example.firstapp.clientes.ClientesFragment"
         android:label="Clientes Fragment"
         tools:layout="@layout/clientes_fragment">
 
