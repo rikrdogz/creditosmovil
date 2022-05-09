@@ -5,11 +5,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
+import com.example.firstapp.pagos.ApiPagoService
+import com.example.firstapp.pagos.PagoModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,12 +64,51 @@ class ClienteInfoFragment : Fragment() {
 
         view.findViewById<EditText>(R.id.txtFecha).setOnClickListener { showModalFecha() }
 
+        view.findViewById<Button>(R.id.btnPagar).setOnClickListener{ GuardarPago()}
 
         super.onViewCreated(view, savedInstanceState)
 
 
 
     }
+
+    fun pagoRetroFit() : Retrofit {
+        return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    fun GuardarPago() {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            var pago: PagoModel = PagoModel(0, 33, monto = 150f, descuento = 0f,
+                    faltaDePago = 0f, fechaCreacion = Date(2022, 5,2 ), fechaPago = Date(2022,5,2), idUsuario = 1, estatusId = 1 )
+
+            val call =pagoRetroFit().create(ApiPagoService::class.java).postGuardarPago(pago)
+            Log.d("DATOS", "----------ENVIANDO------------")
+
+            val responsePago  = call.body()
+
+            activity?.runOnUiThread() {
+                if (call.isSuccessful){
+                    //show
+                    Log.d("DATOS", responsePago.toString())
+
+
+                    Toast.makeText(context, "Obtenido", Toast.LENGTH_SHORT).show()
+
+                }
+                else {
+                    //showError()
+                    Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
+                    Log.d("PROBLEMA", responsePago.toString())
+                }
+
+
+            }
+
+        }
+    }
+
 
     private fun showModalFecha(){
         val datePicker = FechaDateTimePicker{day, month, year -> onDateSelected(day, month, year) }
