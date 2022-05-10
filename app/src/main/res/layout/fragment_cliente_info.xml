@@ -91,6 +91,16 @@
             android:layout_marginTop="25dp"
             />
 
+        <Button
+            android:id="@+id/btnVerPagos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ver Pagos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnPagar"
+            android:layout_marginTop="25dp"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

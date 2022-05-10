@@ -10,16 +10,20 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.firstapp.HeaderInterceptor
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
 import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoModel
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +39,7 @@ class ClienteInfoFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private  var fechaPago: String = ""
 
     private var inputNombre: String? = ""
     private var fragmentClienteBinding: FragmentClienteInfoBinding? = null
@@ -73,15 +78,29 @@ class ClienteInfoFragment : Fragment() {
     }
 
     fun pagoRetroFit() : Retrofit {
+
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+
         return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(pagoClient())
             .build()
     }
+
+    private fun pagoClient(): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        return OkHttpClient.Builder().addInterceptor(HeaderInterceptor()).addInterceptor(loggingInterceptor).build()
+    }
+
     fun GuardarPago() {
+
+        var newPagoDate = this.fechaPago
+
         CoroutineScope(Dispatchers.IO).launch {
 
             var pago: PagoModel = PagoModel(0, 33, monto = 150f, descuento = 0f,
-                    faltaDePago = 0f, fechaCreacion = Date(2022, 5,2 ), fechaPago = Date(2022,5,2), idUsuario = 1, estatusId = 1 )
+                    faltaDePago = 0f, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1 )
 
             val call =pagoRetroFit().create(ApiPagoService::class.java).postGuardarPago(pago)
             Log.d("DATOS", "----------ENVIANDO------------")
@@ -112,13 +131,14 @@ class ClienteInfoFragment : Fragment() {
 
     private fun showModalFecha(){
         val datePicker = FechaDateTimePicker{day, month, year -> onDateSelected(day, month, year) }
+
         datePicker.show(parentFragmentManager, "datePicker")
 
     }
 
     private fun onDateSelected(day: Int, month: Int, year: Int) {
         view?.findViewById<EditText>(R.id.txtFecha)?.setText("$day/$month/$year")
-
+        this.fechaPago = "$year/$month/$day"
     }
 
     override fun onCreateView(
