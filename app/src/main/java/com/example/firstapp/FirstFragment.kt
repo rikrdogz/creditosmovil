@@ -80,13 +80,14 @@ class FirstFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val call =getClientesRetroFit().create(ApiCreditoService::class.java).getClientes("clientes")
             Log.d("DATOS", "----------OTENIENDO------------")
-            val clientes  = call.body()
+            val clientes  = call.body().orEmpty()
 
             activity?.runOnUiThread() {
                 if (call.isSuccessful){
                     //show
                         listaCLientesMuteable.clear()
-                        listaCLientesMuteable.addAll(clientes.orEmpty())
+
+                        clientes.forEach { clienteModel -> listaCLientesMuteable.add(clienteModel)  }
 
                         adapterClientes.notifyDataSetChanged()
 
