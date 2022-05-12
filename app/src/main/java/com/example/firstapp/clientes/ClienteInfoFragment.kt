@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -124,8 +125,18 @@ class ClienteInfoFragment : Fragment() {
                 }
                 else {
                     //showError()
-                    Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
-                    Log.d("PROBLEMA", responsePago.toString())
+                    Toast.makeText(context, "NO SE PUDO GUARDAR EL PAGO", Toast.LENGTH_SHORT).show()
+
+                    var jsonObject = JSONObject()
+
+                    //call.errorBody()?.let { Log.d("PROBLEMA", it.string()) }
+                    call.errorBody()?.let {
+                        jsonObject = JSONObject(it.toString())
+                    }
+                    //call.errorBody()?.let { Log.d("BAD IS", jsonObject.getString("title")) }
+
+
+
                 }
 
 

@@ -23,11 +23,23 @@
             android:text="@string/hello_blank_fragment" />
 
         <TextView
+            android:id="@+id/lblDebe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$1000"
+            android:minHeight="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtNombre"
+            android:textColor="@color/red"
+            android:textSize="25dp"
+            />
+        <TextView
             android:id="@+id/labelMonto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/monto_a_depositar"
-            app:layout_constraintTop_toBottomOf="@id/txtNombre"
+            app:layout_constraintTop_toBottomOf="@id/lblDebe"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="20sp"
@@ -47,7 +59,31 @@
             android:layout_marginTop="10dp"
             android:textSize="40sp"
             android:ems="5"
-            android:inputType="number" />
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/lblMulta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtMontoPago"
+            android:layout_marginTop="10dp"
+            android:text="Multa"
+
+            />
+
+        <EditText
+            android:id="@+id/txtMulta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblMulta"
+            android:textSize="20dp"
+            android:ems="5"
+            android:inputType="numberDecimal"
+            />
 
         <TextView
             android:id="@+id/labelFecha"
@@ -58,7 +94,7 @@
             android:text="@string/fecha_del_abono"
 
             android:layout_marginTop="30dp"
-            app:layout_constraintTop_toBottomOf="@id/txtMontoPago"
+            app:layout_constraintTop_toBottomOf="@id/txtMulta"
 
             />
 
