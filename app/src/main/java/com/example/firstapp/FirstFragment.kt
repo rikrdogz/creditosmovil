@@ -46,6 +46,7 @@ class FirstFragment : Fragment() {
         commCliente =requireActivity() as ClienteComunicator
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+
         return binding.root
 
     }
@@ -82,9 +83,10 @@ class FirstFragment : Fragment() {
             try {
                 val call =getClientesRetroFit().create(ApiCreditoService::class.java).getClientes("clientes")
                 Log.d("DATOS", "----------OTENIENDO------------")
-                val clientes  = call.body().orEmpty()
+
 
                 activity?.runOnUiThread() {
+                    val clientes  = call.body().orEmpty()
                     if (call.isSuccessful){
                         //show
                         listaCLientesMuteable.clear()
@@ -124,7 +126,9 @@ class FirstFragment : Fragment() {
         /*Mandar el parametro de la vista*/
         this.iniciar(view)
         this.ObtenerClientes()
-        Toast.makeText(context, "CREATED", Toast.LENGTH_SHORT).show()
+
+        binding?.btnRecargar?.text ="Recargar"
+        binding?.btnRecargar?.setOnClickListener { ObtenerClientes() }
 
         binding.buttonFirst.setOnClickListener {
             //findNavController().navigate(R.id.action_FirstFragment_to_ClientesFragment)

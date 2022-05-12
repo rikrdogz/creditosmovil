@@ -143,8 +143,9 @@ class ClienteInfoFragment : Fragment() {
     }
 
     private fun onDateSelected(day: Int, month: Int, year: Int) {
-        view?.findViewById<EditText>(R.id.txtFecha)?.setText("$day/$month/$year")
-        this.fechaPago = "$year/$month/$day"
+        var fechaData = "$year-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}"
+        view?.findViewById<EditText>(R.id.txtFecha)?.setText(fechaData)
+        this.fechaPago = fechaData
     }
 
     override fun onCreateView(
