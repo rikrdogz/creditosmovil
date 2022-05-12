@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.firstapp.HeaderInterceptor
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
@@ -70,6 +71,11 @@ class ClienteInfoFragment : Fragment() {
         view.findViewById<EditText>(R.id.txtFecha).setOnClickListener { showModalFecha() }
 
         view.findViewById<Button>(R.id.btnPagar).setOnClickListener{ GuardarPago()}
+
+        view.findViewById<Button>(R.id.btnVerPagos).setOnClickListener {
+            findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment)
+        }
+
 
         super.onViewCreated(view, savedInstanceState)
 
@@ -148,6 +154,7 @@ class ClienteInfoFragment : Fragment() {
         // Inflate the layout for this fragment
 
         //para el binding de la data
+
 
         return inflater.inflate(R.layout.fragment_cliente_info, container, false)
     }

@@ -9,10 +9,12 @@ class PagoAdapter (val listaPagos : List<PagoModel>) : RecyclerView.Adapter<Pago
     }
 
     override fun onBindViewHolder(holder: PagoViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val item = listaPagos[position]
+
+        holder.renderizar(item)
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return listaPagos.count()
     }
 }

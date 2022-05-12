@@ -78,30 +78,38 @@ class FirstFragment : Fragment() {
 
     fun ObtenerClientes() {
         CoroutineScope(Dispatchers.IO).launch {
-            val call =getClientesRetroFit().create(ApiCreditoService::class.java).getClientes("clientes")
-            Log.d("DATOS", "----------OTENIENDO------------")
-            val clientes  = call.body().orEmpty()
 
-            activity?.runOnUiThread() {
-                if (call.isSuccessful){
-                    //show
+            try {
+                val call =getClientesRetroFit().create(ApiCreditoService::class.java).getClientes("clientes")
+                Log.d("DATOS", "----------OTENIENDO------------")
+                val clientes  = call.body().orEmpty()
+
+                activity?.runOnUiThread() {
+                    if (call.isSuccessful){
+                        //show
                         listaCLientesMuteable.clear()
 
                         clientes.forEach { clienteModel -> listaCLientesMuteable.add(clienteModel)  }
 
                         adapterClientes.notifyDataSetChanged()
 
-                    Toast.makeText(context, "Iniciado", Toast.LENGTH_SHORT)
-                    Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
-                    Log.d("LISTA", "Nombre ${listaCLientesMuteable[0].nombre}")
-                }
-                else {
-                    showError()
-                    //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
-                }
+                        Toast.makeText(context, "Iniciado", Toast.LENGTH_SHORT)
+                        Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
+                        Log.d("LISTA", "Nombre ${listaCLientesMuteable[0].nombre}")
+                    }
+                    else {
+                        showError()
+                        //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
+                    }
 
 
+                }
             }
+
+            catch (e: Exception) {
+                Log.d("Error Problema", e.message.toString())
+            }
+
 
         }
     }

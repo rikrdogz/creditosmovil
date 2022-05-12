@@ -50,13 +50,21 @@
     <fragment
         android:id="@+id/ClienteInfoFragment"
         android:name="com.example.firstapp.clientes.ClienteInfoFragment"
-        android:label="Informacion"
+        android:label="@string/clientetitle"
         tools:layout="@layout/fragment_cliente_info"
         >
 
         <action
             android:id="@+id/action_ClienteInfo_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_ClienteInfoFragment_to_pagosFragment"
+            app:destination="@id/pagosFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/pagosFragment"
+        android:name="com.example.firstapp.PagosFragment"
+        android:label="@string/detallepagos"
+        tools:layout="@layout/fragment_pagos" />
 </navigation>

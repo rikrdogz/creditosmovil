@@ -2,7 +2,7 @@
     <string name="app_name">FirstApp</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
+    <string name="first_fragment_label">Lista de Clientes</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -16,4 +16,6 @@
     <string name="abonar">Abonar</string>
     <string name="monto_a_depositar">Monto A Depositar</string>
     <string name="fecha_del_abono">Fecha del Abono</string>
+    <string name="clientetitle">Cliente</string>
+    <string name="detallepagos">Detalle de pagos</string>
 </resources>

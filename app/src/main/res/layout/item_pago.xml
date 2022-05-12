@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/txtNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Nombre Cliente"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+
+        />
+
+    <TextView
+        android:id="@+id/txtFechaPago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="04/04/2022"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txtNombre"
+        app:layout_constraintTop_toBottomOf="@id/txtNombre"
+        android:layout_margin="6dp"
+        />
+
+    <TextView
+        android:id="@+id/txtMontoPago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="$150.00"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        android:textFontWeight="800"
+        app:layout_constraintStart_toEndOf="@id/txtFechaPago"
+        app:layout_constraintEnd_toEndOf="@id/txtNombre"
+        app:layout_constraintTop_toBottomOf="@id/txtNombre"
+        app:layout_constraintBottom_toBottomOf="@id/txtFechaPago"
+        android:layout_marginLeft="10dp"
+        />
+
+    <TextView
+        android:id="@+id/txtNumero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="#2"
+        app:layout_constraintStart_toEndOf="@id/txtNombre"
+        app:layout_constraintTop_toTopOf="@id/txtFechaPago"
+        android:layout_marginLeft="10dp"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
