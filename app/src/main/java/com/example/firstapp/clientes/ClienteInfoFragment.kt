@@ -11,20 +11,25 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.firstapp.ErrorResponse
 import com.example.firstapp.HeaderInterceptor
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
 import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoModel
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,6 +49,7 @@ class ClienteInfoFragment : Fragment() {
     private  var fechaPago: String = ""
 
     private var inputNombre: String? = ""
+    private  var inputIdCliente: Int? = 0
     private var fragmentClienteBinding: FragmentClienteInfoBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +63,11 @@ class ClienteInfoFragment : Fragment() {
         }
 
         inputNombre =arguments?.getString("nombre_txt")
+        inputIdCliente = arguments?.getInt("idCliente")
 
         Log.d("info OnCreate", arguments?.getString("nombre_txt").orEmpty())
+        Log.d("info CLIENTE", inputIdCliente.toString())
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,6 +109,17 @@ class ClienteInfoFragment : Fragment() {
         return OkHttpClient.Builder().addInterceptor(HeaderInterceptor()).addInterceptor(loggingInterceptor).build()
     }
 
+    fun ObtenerInfoCliente(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
+            Log.d("DATOS", "----------OBTENIENDO------------")
+
+            var responseInfo = call.body()
+
+
+        }
+    }
+
     fun GuardarPago() {
 
         var newPagoDate = this.fechaPago
@@ -124,17 +144,57 @@ class ClienteInfoFragment : Fragment() {
 
                 }
                 else {
-                    //showError()
+
                     Toast.makeText(context, "NO SE PUDO GUARDAR EL PAGO", Toast.LENGTH_SHORT).show()
 
                     var jsonObject = JSONObject()
+                    var textReponse : String = call.errorBody()!!.charStream().readText()
+                    textReponse = textReponse.replace("$", "")
+                    Log.d("RESPONSE", textReponse )
 
-                    //call.errorBody()?.let { Log.d("PROBLEMA", it.string()) }
-                    call.errorBody()?.let {
-                        jsonObject = JSONObject(it.toString())
+                    var problemaGeneral : String = ""
+
+                    try {
+
+
+                        try {
+                            /*Intenerar convertir a json si tiene formato*/
+                            JSONObject(textReponse)
+
+
+                        } catch (e: JSONException) {
+                            Log.d("PROBLEMA", "No es JSON" )
+
+                            /*Se mostrara el erros que venga*/
+                            problemaGeneral = textReponse;
+                            throw Exception("No es FORMATO JSON")
+
+                        }
+
+                        /*Convertir a tipo ErrorResponse*/
+                        if (JSONObject(textReponse).has("errors"))
+                        {
+                            var myObjet = Gson().fromJson(textReponse, ErrorResponse::class.java)
+
+                            var errorData = JSONObject(myObjet.errors.toString())
+
+                            problemaGeneral = errorData.toString()
+
+                            Log.d("PROBLEMA", errorData.toString() )
+                        }
+                        else
+                        {
+                            problemaGeneral = textReponse;
+                        }
+
                     }
-                    //call.errorBody()?.let { Log.d("BAD IS", jsonObject.getString("title")) }
+                    catch (e: Exception)
+                    {
+                        Log.d("EXEP", e.message.toString())
+                    }
 
+
+                    view?.findViewById<TextView>(R.id.lblProblema)?.text = problemaGeneral
 
 
                 }
@@ -154,7 +214,7 @@ class ClienteInfoFragment : Fragment() {
     }
 
     private fun onDateSelected(day: Int, month: Int, year: Int) {
-        var fechaData = "$year-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}"
+        var fechaData = "$year-${ (month + 1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}"
         view?.findViewById<EditText>(R.id.txtFecha)?.setText(fechaData)
         this.fechaPago = fechaData
     }

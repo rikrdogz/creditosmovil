@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.firstapp.clientes.ClienteComunicator
+import com.example.firstapp.clientes.ClienteModel
 import com.example.firstapp.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -57,12 +58,13 @@ class MainActivity : AppCompatActivity(), ClienteComunicator {
                 || super.onSupportNavigateUp()
     }
 
-    override fun passDataCliente(nombreCliente: String) {
+    override fun passDataCliente(cliente: ClienteModel) {
         var bundle = Bundle()
 
-        bundle.putString("nombre_txt", nombreCliente)
+        bundle.putString("nombre_txt", cliente.nombre)
 
-        Bundle().putString("nombre_txt", nombreCliente)
+        bundle.putInt("idCliente", cliente.clienteId)
+
 
 
         findNavController(R.id.nav_host_fragment_content_main)

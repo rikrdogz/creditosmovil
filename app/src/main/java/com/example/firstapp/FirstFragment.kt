@@ -72,7 +72,7 @@ class FirstFragment : Fragment() {
     }
 
     fun onClienteClick(position: Int) {
-        commCliente.passDataCliente(listaCLientesMuteable[position].nombre)
+        commCliente.passDataCliente(listaCLientesMuteable[position])
         Toast.makeText(context, listaCLientesMuteable[position].nombre, Toast.LENGTH_SHORT).show()
 
     }
