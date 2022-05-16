@@ -95,7 +95,7 @@ class FirstFragment : Fragment() {
 
                         adapterClientes.notifyDataSetChanged()
 
-                        Toast.makeText(context, "Iniciado", Toast.LENGTH_SHORT)
+
                         Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
                         Log.d("LISTA", "Nombre ${listaCLientesMuteable[0].nombre}")
                     }
@@ -132,7 +132,7 @@ class FirstFragment : Fragment() {
 
         binding.buttonFirst.setOnClickListener {
             //findNavController().navigate(R.id.action_FirstFragment_to_ClientesFragment)
-            Toast.makeText(getActivity(), "CREATED", Toast.LENGTH_SHORT).show()
+
         }
     }
 

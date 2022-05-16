@@ -1,5 +1,6 @@
 package com.example.firstapp.clientes
 
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.dantsu.escposprinter.EscPosPrinter
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.example.firstapp.ErrorResponse
 import com.example.firstapp.HeaderInterceptor
 import com.example.firstapp.R
@@ -19,7 +22,6 @@ import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +31,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,6 +54,8 @@ class ClienteInfoFragment : Fragment() {
 
     private var inputNombre: String? = ""
     private  var inputIdCliente: Int? = 0
+    private  var inputIdCredito: Int = 0
+
     private var fragmentClienteBinding: FragmentClienteInfoBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,9 +84,14 @@ class ClienteInfoFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.txtNombre).text = inputNombre.orEmpty()
 
+        this.ObtenerInfoCliente()
+
         view.findViewById<EditText>(R.id.txtFecha).setOnClickListener { showModalFecha() }
 
-        view.findViewById<Button>(R.id.btnPagar).setOnClickListener{ GuardarPago()}
+        view.findViewById<Button>(R.id.btnPagar).setOnClickListener{
+            //GuardarPago()
+            this.imprimirTicket()
+        }
 
         view.findViewById<Button>(R.id.btnVerPagos).setOnClickListener {
             findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment)
@@ -116,8 +127,92 @@ class ClienteInfoFragment : Fragment() {
 
             var responseInfo = call.body()
 
+            activity?.runOnUiThread() {
+                if (call.isSuccessful)
+                {
+                    Log.d("DATOS", responseInfo.toString())
+
+                    var pendienteTexto : String = "";
+
+
+                    if (responseInfo?.idCredito != null)
+                    {
+
+                        pendienteTexto = responseInfo?.pendientePago.toString().orEmpty()
+
+                        inputIdCredito = responseInfo?.idCredito
+
+                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.VISIBLE
+
+                    }
+                    else
+                    {
+                        pendienteTexto = "NO HAY CREDITO ACTIVO"
+
+                        inputIdCliente = 0;
+
+                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
+                    }
+
+                    view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
+
+                    Toast.makeText(context, "Obtenido", Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO CREDITO ACTIVO"
+                    Log.d("DATOS", "NO OBTENIDOS")
+                }
+            }
 
         }
+    }
+
+    fun imprimirTicket() {
+        var connection = BluetoothPrintersConnections.selectFirstPaired()
+
+        if (connection != null)
+        {
+            var locale: Locale = Locale("id", "ID")
+            var df = SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a", locale)
+            var nf = NumberFormat.getCurrencyInstance(locale)
+
+
+            var impresora = EscPosPrinter(connection,203, 48f, 32);
+            var textoImpresora : String = """
+                [L]
+                [L]${df.format(Date())}
+                [C]================================
+                [L]<b>Effective Java</b>
+                [L]    1 pcs[R]${nf.format(25000)}
+                [L]<b>Headfirst Android Development</b>
+                [L]    1 pcs[R]${nf.format(45000)}
+                [L]<b>The Martian</b>
+                [L]    1 pcs[R]${nf.format(20000)}
+                [C]--------------------------------
+                [L]TOTAL[R]${nf.format(90000)}
+                [L]DISCOUNT 15%[R]${nf.format(13500)}
+                [L]TAX 10%[R]${nf.format(7650)}
+                [L]<b>GRAND TOTAL[R]${nf.format(84150)}</b>
+                [C]--------------------------------
+                [C]<barcode type='ean13' height='10'>202105160005</barcode>
+                [C]--------------------------------
+                [C]Thanks For Shopping
+                [C]https://kodejava.org
+                [L]
+                [L]<qrcode>https://kodejava.org</qrcode>
+                
+                """
+
+            impresora.printFormattedText(textoImpresora)
+
+        }
+
+        else
+        {
+            Log.d("IMPRESORA", "NO ESTA CONECTADA")
+        }
+
     }
 
     fun GuardarPago() {
@@ -126,7 +221,7 @@ class ClienteInfoFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            var pago: PagoModel = PagoModel(0, 33, monto = 150f, descuento = 0f,
+            var pago: PagoModel = PagoModel(0, inputIdCredito, monto = 150f, descuento = 0f,
                     faltaDePago = 0f, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1 )
 
             val call =pagoRetroFit().create(ApiPagoService::class.java).postGuardarPago(pago)
@@ -139,8 +234,6 @@ class ClienteInfoFragment : Fragment() {
                     //show
                     Log.d("DATOS", responsePago.toString())
 
-
-                    Toast.makeText(context, "Obtenido", Toast.LENGTH_SHORT).show()
 
                 }
                 else {
@@ -204,6 +297,8 @@ class ClienteInfoFragment : Fragment() {
 
         }
     }
+
+
 
 
     private fun showModalFecha(){

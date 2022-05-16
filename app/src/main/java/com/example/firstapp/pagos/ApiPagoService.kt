@@ -1,5 +1,6 @@
 package com.example.firstapp.pagos
 
+import com.example.firstapp.clientes.ClienteCreditoActivoViewModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,5 +13,5 @@ interface ApiPagoService {
     suspend fun postGuardarPago(@Body pagoModel :  PagoModel): Response<Number>
 
     @GET("/Creditos/creditoActivo/{idCliente}")
-    suspend fun creditoActivo(@Path("idCliente") idCliente : Int?): Response<Int>
+    suspend fun creditoActivo(@Path("idCliente") idCliente : Int?): Response<ClienteCreditoActivoViewModel>
 }
