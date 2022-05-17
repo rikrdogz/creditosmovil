@@ -1,10 +1,23 @@
 package com.example.firstapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.firstapp.clientes.ApiCreditoService
+import com.example.firstapp.pagos.ApiPagoService
+import com.example.firstapp.pagos.PagoAdapter
+import com.example.firstapp.pagos.PagoModel
+import com.example.firstapp.pagos.PagoViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,12 +34,21 @@ class PagosFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private  lateinit var adaptarPagos : PagoAdapter
+    private  var listaPagosMuteable = mutableListOf<PagoViewModel>()
+    private  var inputIdCliente: Int? = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        inputIdCliente = arguments?.getInt("idCliente")
+        this.obtenerPagos()
+
     }
 
     override fun onCreateView(
@@ -34,7 +56,79 @@ class PagosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+
         return inflater.inflate(R.layout.fragment_pagos, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        this.iniciarRecycler()
+
+    }
+
+    fun iniciarRecycler() {
+        val rview = view?.findViewById<RecyclerView>(R.id.listPagosRecycler)
+
+        adaptarPagos = PagoAdapter(listaPagosMuteable)
+
+        rview?.layoutManager = LinearLayoutManager(context)
+        rview?.adapter = adaptarPagos
+
+        Log.d("RECYCLER", "Iniciando el view")
+
+    }
+
+    fun getPagosRetrofit() : Retrofit {
+        return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    }
+
+    fun obtenerPagos() {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+                Log.d("API", inputIdCliente.toString())
+
+                val call =getPagosRetrofit().create(ApiPagoService::class.java).obtenerpagos(inputIdCliente)
+                Log.d("DATOS", "----------OTENIENDO------------")
+
+
+                activity?.runOnUiThread() {
+                    val pagos  = call.body().orEmpty()
+                    if (call.isSuccessful){
+                        //show
+                        listaPagosMuteable.clear()
+
+
+                        pagos.forEach { pagoModel -> listaPagosMuteable.add(pagoModel)  }
+
+
+
+                        adaptarPagos.notifyDataSetChanged()
+
+
+                        Log.d("LISTA", "HAY DATOS ${pagos.size}")
+                        //Log.d("LISTA", "Nombre ${pagos[0].nombre}")
+                    }
+                    else {
+                        Log.d("LISTA", "NOO DATOS ${pagos.size}")
+                        //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
+                    }
+
+
+                }
+            }
+
+            catch (e: Exception) {
+                Log.d("Error Problema", e.message.toString())
+            }
+
+
+        }
     }
 
     companion object {

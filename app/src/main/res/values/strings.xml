@@ -18,4 +18,5 @@
     <string name="fecha_del_abono">Fecha del Abono</string>
     <string name="clientetitle">Cliente</string>
     <string name="detallepagos">Detalle de pagos</string>
+    <string name="imprimir">Imprimir</string>
 </resources>

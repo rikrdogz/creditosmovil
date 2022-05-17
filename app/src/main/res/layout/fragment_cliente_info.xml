@@ -25,6 +25,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:textSize="40sp"
                 android:layout_marginTop="15dp"
+                android:elevation="5dp"
+                android:background="@drawable/fondo_redondeado"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:textAlignment="center"
+                tools:text="Nombre del cliente con apellido"
                 android:text="" />
             <TextView
                 android:id="@+id/lblTituloDebe"

@@ -3,7 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:elevation="10dp"
+    android:layout_marginBottom="10dp"
+    >
 
     <TextView
         android:id="@+id/txtNombre"
@@ -21,7 +25,7 @@
         android:id="@+id/txtFechaPago"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="04/04/2022"
+        tools:text="04/04/2022 23:05:45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/txtNombre"
         app:layout_constraintTop_toBottomOf="@id/txtNombre"
@@ -33,11 +37,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="$150.00"
-        android:textSize="18sp"
-        android:textStyle="normal"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:textFontWeight="800"
+        android:minWidth="150dp"
         app:layout_constraintStart_toEndOf="@id/txtFechaPago"
-        app:layout_constraintEnd_toEndOf="@id/txtNombre"
+        app:layout_constraintEnd_toStartOf="@id/txtNumero"
         app:layout_constraintTop_toBottomOf="@id/txtNombre"
         app:layout_constraintBottom_toBottomOf="@id/txtFechaPago"
         android:layout_marginLeft="10dp"
@@ -48,10 +53,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="#2"
-        app:layout_constraintStart_toEndOf="@id/txtNombre"
+        app:layout_constraintStart_toEndOf="@id/txtMontoPago"
         app:layout_constraintTop_toTopOf="@id/txtFechaPago"
         android:layout_marginLeft="10dp"
+        android:maxHeight="50dp"
         />
 
+    <Button
+
+        android:id="@+id/btnImprimir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/imprimir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtMontoPago"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

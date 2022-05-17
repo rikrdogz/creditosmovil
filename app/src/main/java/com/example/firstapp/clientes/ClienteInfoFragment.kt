@@ -16,10 +16,12 @@ import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.example.firstapp.ErrorResponse
 import com.example.firstapp.HeaderInterceptor
+import com.example.firstapp.ModuloImpresora
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
 import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoModel
+import com.example.firstapp.pagos.PagoViewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -90,11 +92,13 @@ class ClienteInfoFragment : Fragment() {
 
         view.findViewById<Button>(R.id.btnPagar).setOnClickListener{
             //GuardarPago()
-            this.imprimirTicket()
+            //this.imprimirTicket()
+            var moduloImpresora : ModuloImpresora = ModuloImpresora()
+            moduloImpresora.imprimirTicket(PagoViewModel(1,1,125f,0f,"luis ricardo","1", 20f, "hoy", "hoy",1,1))
         }
 
         view.findViewById<Button>(R.id.btnVerPagos).setOnClickListener {
-            findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment)
+            findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment, arguments)
         }
 
 
@@ -122,6 +126,9 @@ class ClienteInfoFragment : Fragment() {
 
     fun ObtenerInfoCliente(){
         CoroutineScope(Dispatchers.IO).launch {
+
+
+
             val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
             Log.d("DATOS", "----------OBTENIENDO------------")
 
@@ -173,38 +180,30 @@ class ClienteInfoFragment : Fragment() {
 
         if (connection != null)
         {
-            var locale: Locale = Locale("id", "ID")
-            var df = SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a", locale)
+            var locale: Locale = Locale("id", "MX")
+            var df = SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", locale)
             var nf = NumberFormat.getCurrencyInstance(locale)
 
 
-            var impresora = EscPosPrinter(connection,203, 48f, 32);
+            var impresora = EscPosPrinter(connection,203, 30f, 30);
             var textoImpresora : String = """
+                [C] <b>BELLELY CREDITOS</b>
                 [L]
+                [L] ${inputNombre.toString()} ${System.lineSeparator()}
                 [L]${df.format(Date())}
+                [C]<b>===== RECIBO DE PAGO ======<b> ${System.lineSeparator()}
                 [C]================================
-                [L]<b>Effective Java</b>
-                [L]    1 pcs[R]${nf.format(25000)}
-                [L]<b>Headfirst Android Development</b>
-                [L]    1 pcs[R]${nf.format(45000)}
-                [L]<b>The Martian</b>
-                [L]    1 pcs[R]${nf.format(20000)}
-                [C]--------------------------------
-                [L]TOTAL[R]${nf.format(90000)}
-                [L]DISCOUNT 15%[R]${nf.format(13500)}
-                [L]TAX 10%[R]${nf.format(7650)}
-                [L]<b>GRAND TOTAL[R]${nf.format(84150)}</b>
-                [C]--------------------------------
-                [C]<barcode type='ean13' height='10'>202105160005</barcode>
-                [C]--------------------------------
-                [C]Thanks For Shopping
-                [C]https://kodejava.org
                 [L]
-                [L]<qrcode>https://kodejava.org</qrcode>
-                
-                """
+                [L]1 pago[R]${nf.format(150)}
+                [C]<b>del credito</b>
+                [C]--------------------------------
+                [L]SUBTOTAL[R]${nf.format(150)} ${System.lineSeparator()}
+                [L]MULTA [R]${nf.format(20)}  ${System.lineSeparator()}              
+                [L]<b>TOTAL[R]${nf.format(130)}</b>
+             
+                """.trimIndent()
 
-            impresora.printFormattedText(textoImpresora)
+            impresora.printFormattedText(textoImpresora, 8f)
 
         }
 
