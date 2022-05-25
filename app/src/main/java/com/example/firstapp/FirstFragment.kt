@@ -41,6 +41,7 @@ class FirstFragment : Fragment() {
     private lateinit var adapterClientes: ClientesAdapter
     private var listaCLientesMuteable =  mutableListOf<ClienteModel>()
     private var loadingInfo = true
+    private var intentConection = 0;
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -82,7 +83,7 @@ class FirstFragment : Fragment() {
 
     fun onClienteClick(position: Int) {
         commCliente.passDataCliente(listaCLientesMuteable[position])
-        Toast.makeText(context, listaCLientesMuteable[position].nombre, Toast.LENGTH_SHORT).show()
+
 
     }
 
@@ -144,6 +145,13 @@ class FirstFragment : Fragment() {
 
             catch (e: Exception) {
                 Log.d("Error Problema", e.message.toString())
+
+                intentConection++
+
+                if (intentConection < 3)
+                {
+                    obtenerClientes()
+                }
             }
 
 
@@ -161,6 +169,7 @@ class FirstFragment : Fragment() {
 
         /*Mandar el parametro de la vista*/
         this.iniciar(view)
+        this.intentConection = 1;
         this.obtenerClientes()
 
         binding?.btnRecargar?.text ="Recargar"

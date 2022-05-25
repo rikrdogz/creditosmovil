@@ -73,15 +73,14 @@ class ClienteInfoFragment : Fragment() {
         inputNombre =arguments?.getString("nombre_txt")
         inputIdCliente = arguments?.getInt("idCliente")
 
-        Log.d("info OnCreate", arguments?.getString("nombre_txt").orEmpty())
-        Log.d("info CLIENTE", inputIdCliente.toString())
+
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         var txtName = view.findViewById<TextView>(R.id.txtNombre)
-        Log.d("Created!!", inputNombre.orEmpty())
+
         txtName.text = inputNombre.orEmpty()
 
         view.findViewById<TextView>(R.id.txtNombre).text = inputNombre.orEmpty()
@@ -130,14 +129,14 @@ class ClienteInfoFragment : Fragment() {
 
 
             val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
-            Log.d("DATOS", "----------OBTENIENDO------------")
+
 
             var responseInfo = call.body()
 
             activity?.runOnUiThread() {
                 if (call.isSuccessful)
                 {
-                    Log.d("DATOS", responseInfo.toString())
+
 
                     var pendienteTexto : String = "";
                     var ultimoPago : String = "";
@@ -165,7 +164,7 @@ class ClienteInfoFragment : Fragment() {
                     view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
                     view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
 
-                    Toast.makeText(context, "Obtenido", Toast.LENGTH_SHORT).show()
+
                 }
                 else
                 {

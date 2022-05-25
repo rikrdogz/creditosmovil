@@ -45,6 +45,18 @@
                 android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/txtNombre"
                 >
+
+                <Button
+                    android:id="@+id/btnVerPagos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ver Pagos"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="5dp"
+                    />
+
                 <TextView
                     android:id="@+id/lblTituloDebe"
                     android:layout_width="wrap_content"
@@ -52,7 +64,7 @@
                     android:text="Debe"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btnVerPagos"
                     android:textSize="20sp"
                     />
                 <TextView
@@ -222,16 +234,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <Button
-                android:id="@+id/btnVerPagos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ver Pagos"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/panelPago"
-                android:layout_marginTop="25dp"
-                />
+
 
 
 
