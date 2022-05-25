@@ -10,8 +10,9 @@ data class PagoViewModel (
     @SerializedName("nombre") var nombre: String,
     @SerializedName("numeroPago") var numeroPago: String,
     @SerializedName("faltaDePago") var faltaDePago: Float,
-    @SerializedName("fechaCreacion") var fechaCreacion: String,
+    @SerializedName("fechaCreacionPago") var fechaCreacion: String,
     @SerializedName("fechaPago") var fechaPago: String,
     @SerializedName("estatusId") var estatusId: Number,
     @SerializedName("idUsuario") var idUsuario: Number,
+    @SerializedName("observacion") var observacion: String
 )

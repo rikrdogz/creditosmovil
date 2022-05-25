@@ -32,122 +32,195 @@
                 android:textAlignment="center"
                 tools:text="Nombre del cliente con apellido"
                 android:text="" />
-            <TextView
-                android:id="@+id/lblTituloDebe"
-                android:layout_width="wrap_content"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/panelInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Debe"
+                android:elevation="10dp"
+                android:background="@color/fondo1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:padding="10dp"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/txtNombre"
-                android:textSize="20sp"
-                />
-            <TextView
-                android:id="@+id/lblDebe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:minHeight="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblTituloDebe"
-                android:textColor="@color/red"
-                android:textSize="25sp"
-                />
+                >
+                <TextView
+                    android:id="@+id/lblTituloDebe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Debe"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="20sp"
+                    />
+                <TextView
+                    android:id="@+id/lblDebe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:minHeight="10dp"
+                    tools:text="100"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblTituloDebe"
+                    android:textColor="@color/red"
+                    android:textSize="25sp"
+                    />
 
-            <TextView
-                android:id="@+id/labelMonto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/monto_a_depositar"
-                app:layout_constraintTop_toBottomOf="@id/lblDebe"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textSize="20sp"
-                android:layout_marginTop="15dp"
-                />
+                <TextView
+                    android:id="@+id/lblultimoPago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ultimo Pago"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblDebe"
+                    android:layout_marginTop="5dp"
+                    />
 
-            <EditText
-                android:id="@+id/txtMontoPago"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/labelMonto"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textAlignment="center"
-                tools:text="$150.00"
-                android:background="@color/field_text"
-                android:layout_marginTop="10dp"
-                android:textSize="40sp"
-                android:ems="5"
-                android:inputType="numberDecimal" />
+                <TextView
+                    android:id="@+id/txtUltimoPago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:background="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblultimoPago"
+                    tools:text="$150  -   07/04/2022"
+                    />
 
-            <TextView
-                android:id="@+id/lblMulta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtMontoPago"
-                android:layout_marginTop="10dp"
-                android:text="Multa"
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                />
-
-            <EditText
-                android:id="@+id/txtMulta"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/panelPago"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lblMulta"
-                android:textSize="20dp"
-                android:ems="5"
-                android:inputType="numberDecimal"
-                />
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/panelInfo"
+                android:minHeight="100dp"
+                android:visibility="visible"
+                >
 
-            <TextView
-                android:id="@+id/labelFecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/fecha_del_abono"
+                <TextView
+                    android:id="@+id/labelMonto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/monto_a_depositar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textSize="20sp"
+                    android:layout_marginTop="15dp"
+                    />
 
-                android:layout_marginTop="30dp"
-                app:layout_constraintTop_toBottomOf="@id/txtMulta"
+                <EditText
+                    android:id="@+id/txtMontoPago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/labelMonto"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textAlignment="center"
+                    tools:text="$150.00"
+                    android:background="@color/field_text"
+                    android:layout_marginTop="10dp"
+                    android:textSize="40sp"
+                    android:ems="5"
+                    android:inputType="numberDecimal" />
 
-                />
+                <TextView
+                    android:id="@+id/lblMulta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtMontoPago"
+                    android:layout_marginTop="10dp"
+                    android:text="Multa"
 
-            <EditText
-                android:id="@+id/txtFecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="datetime"
-                android:ems="6"
-                android:layout_marginTop="10dp"
-                android:datePickerMode="spinner"
-                android:calendarViewShown="false"
-                android:startYear="2022"
-                android:background="@color/field_text"
-                android:clickable="false"
-                android:focusable="false"
-                app:layout_constraintTop_toBottomOf="@id/labelFecha"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
+                    />
 
-            <Button
-                android:id="@+id/btnPagar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/txtFecha"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/abonar"
-                android:visibility="invisible"
-                android:layout_marginTop="25dp"
-                />
+                <EditText
+                    android:id="@+id/txtMulta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblMulta"
+                    android:textSize="20dp"
+                    android:ems="5"
+                    android:inputType="numberDecimal"
+                    />
+
+                <TextView
+                    android:id="@+id/labelFecha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/fecha_del_abono"
+
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@id/txtMulta"
+
+                    />
+
+                <EditText
+                    android:id="@+id/txtFecha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="datetime"
+                    android:ems="6"
+                    android:layout_marginTop="10dp"
+                    android:datePickerMode="spinner"
+                    android:calendarViewShown="false"
+                    android:startYear="2022"
+                    android:background="@color/field_text"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:layout_constraintTop_toBottomOf="@id/labelFecha"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+                <Button
+                    android:id="@+id/btnPagar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/txtFecha"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/abonar"
+                    android:visibility="invisible"
+                    android:layout_marginTop="25dp"
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/lblProblema"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Este es error normal para pruebas"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txtFecha"
+                    android:background="@color/red"
+                    android:textColor="@color/white"
+                    android:padding="0dp"
+                    android:layout_marginTop="15dp"
+
+                    android:textSize="18sp"
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <Button
                 android:id="@+id/btnVerPagos"
@@ -156,25 +229,11 @@
                 android:text="Ver Pagos"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnPagar"
+                app:layout_constraintTop_toBottomOf="@id/panelPago"
                 android:layout_marginTop="25dp"
                 />
 
-            <TextView
-                android:id="@+id/lblProblema"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Este es error normal para pruebas"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnVerPagos"
-                android:background="@color/red"
-                android:textColor="@color/white"
-                android:padding="5dp"
-                android:layout_marginTop="15dp"
 
-                android:textSize="18sp"
-                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

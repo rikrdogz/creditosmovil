@@ -13,4 +13,6 @@ data class PagoModel(
     @SerializedName("fechaPago") var fechaPago: String,
     @SerializedName("estatusId") var estatusId: Number,
     @SerializedName("idUsuario") var idUsuario: Number,
+
+    @SerializedName("observacion") var observacion: String
 )

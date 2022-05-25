@@ -10,4 +10,6 @@
     <color name="field_text">#FFF2FFFF</color>
     <color name="red">#c3002f</color>
     <color name="azul">#0b0d88</color>
+    <color name="fondo1">#E1E2E1</color>
+    <color name="ligero">#90caf9</color>
 </resources>

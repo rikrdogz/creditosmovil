@@ -21,7 +21,7 @@ class PagoViewHolder (view : View) : RecyclerView.ViewHolder(view) {
         nombre.text = "Nombre del cliente model"
         fechaPago.text =pagoModel.fechaPago
         monto.text = pagoModel.monto.toString()
-        numero.text = "#4"
+        numero.text = pagoModel.fechaCreacion
 
         btnImprimir.setOnClickListener {
 
@@ -38,7 +38,8 @@ class PagoViewHolder (view : View) : RecyclerView.ViewHolder(view) {
                     pagoModel.faltaDePago,
                    "",
                     pagoModel.fechaPago,
-                    1,1
+                    1,1,
+                    ""
                 )
             )
 

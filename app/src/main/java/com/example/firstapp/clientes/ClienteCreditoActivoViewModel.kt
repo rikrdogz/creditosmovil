@@ -7,5 +7,6 @@ data class ClienteCreditoActivoViewModel (
     @SerializedName("pendientePago") val pendientePago: Float,
     @SerializedName("numeroPago") val numeroPago: Int,
     @SerializedName("montoPrestado") val montoPrestado: Float,
-    @SerializedName("cliente") val cliente: String
+    @SerializedName("cliente") val cliente: String,
+    @SerializedName("fechaUltimoPago") val fechaUltimoPago: String
 )

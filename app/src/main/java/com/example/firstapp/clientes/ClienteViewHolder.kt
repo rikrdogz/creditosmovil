@@ -10,6 +10,7 @@ class ClienteViewHolder(view:View, private val onClickItem:(position:Int) -> Uni
     val nombre = view.findViewById<TextView>(R.id.txtNombre)
     val paterno = view.findViewById<TextView>(R.id.txtPaterno)
     val materno = view.findViewById<TextView>(R.id.txtMaterno)
+    val iniciales = view.findViewById<TextView>(R.id.txtIniciales)
 
     init {
         itemView.setOnClickListener{
@@ -21,6 +22,7 @@ class ClienteViewHolder(view:View, private val onClickItem:(position:Int) -> Uni
         nombre.text = clienteModel.nombre
         paterno.text = clienteModel.apellidoPaterno
         materno.text = clienteModel.apellidoMaterno
+        iniciales.text = clienteModel.nombre.substring(0,1) + clienteModel.apellidoPaterno.substring(0,1)
 
     }
 }

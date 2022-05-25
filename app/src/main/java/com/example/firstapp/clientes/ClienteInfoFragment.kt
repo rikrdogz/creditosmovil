@@ -91,10 +91,10 @@ class ClienteInfoFragment : Fragment() {
         view.findViewById<EditText>(R.id.txtFecha).setOnClickListener { showModalFecha() }
 
         view.findViewById<Button>(R.id.btnPagar).setOnClickListener{
-            //GuardarPago()
+            GuardarPago()
             //this.imprimirTicket()
-            var moduloImpresora : ModuloImpresora = ModuloImpresora()
-            moduloImpresora.imprimirTicket(PagoViewModel(1,1,125f,0f,"luis ricardo","1", 20f, "hoy", "hoy",1,1))
+            //var moduloImpresora : ModuloImpresora = ModuloImpresora()
+            //moduloImpresora.imprimirTicket(PagoViewModel(1,1,125f,0f,"luis ricardo","1", 20f, "hoy", "hoy",1,1, ""))
         }
 
         view.findViewById<Button>(R.id.btnVerPagos).setOnClickListener {
@@ -140,12 +140,13 @@ class ClienteInfoFragment : Fragment() {
                     Log.d("DATOS", responseInfo.toString())
 
                     var pendienteTexto : String = "";
-
+                    var ultimoPago : String = "";
 
                     if (responseInfo?.idCredito != null)
                     {
 
                         pendienteTexto = responseInfo?.pendientePago.toString().orEmpty()
+                        ultimoPago = responseInfo?.fechaUltimoPago.toString().orEmpty()
 
                         inputIdCredito = responseInfo?.idCredito
 
@@ -162,6 +163,7 @@ class ClienteInfoFragment : Fragment() {
                     }
 
                     view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
+                    view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
 
                     Toast.makeText(context, "Obtenido", Toast.LENGTH_SHORT).show()
                 }
@@ -219,9 +221,10 @@ class ClienteInfoFragment : Fragment() {
         var newPagoDate = this.fechaPago
 
         CoroutineScope(Dispatchers.IO).launch {
+            var monto = view?.findViewById<EditText>(R.id.txtMontoPago).toString().toFloat();
 
-            var pago: PagoModel = PagoModel(0, inputIdCredito, monto = 150f, descuento = 0f,
-                    faltaDePago = 0f, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1 )
+            var pago: PagoModel = PagoModel(0, inputIdCredito, monto = monto, descuento = 0f,
+                    faltaDePago = 0f, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1, observacion = ""  )
 
             val call =pagoRetroFit().create(ApiPagoService::class.java).postGuardarPago(pago)
             Log.d("DATOS", "----------ENVIANDO------------")
