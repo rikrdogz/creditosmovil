@@ -1,6 +1,6 @@
 package com.example.firstapp.pagos
 
-import android.util.Log
+
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -18,14 +18,14 @@ class PagoViewHolder (view : View) : RecyclerView.ViewHolder(view) {
     val btnImprimir = view.findViewById<Button>(R.id.btnImprimir)
 
     fun renderizar(pagoModel: PagoViewModel) {
-        nombre.text = "Nombre del cliente model"
+        nombre.text = pagoModel.nombre
         fechaPago.text =pagoModel.fechaPago
         monto.text = pagoModel.monto.toString()
         numero.text = pagoModel.fechaCreacion
 
         btnImprimir.setOnClickListener {
 
-            var moduloImpresora: ModuloImpresora = ModuloImpresora()
+            val moduloImpresora = ModuloImpresora()
 
             moduloImpresora.imprimirTicket(
                 PagoViewModel(

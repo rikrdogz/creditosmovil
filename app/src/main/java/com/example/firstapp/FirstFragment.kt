@@ -5,20 +5,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.firstapp.clientes.ApiCreditoService
-import com.example.firstapp.clientes.ClienteComunicator
-import com.example.firstapp.clientes.ClienteModel
-import com.example.firstapp.clientes.ClientesAdapter
+import com.example.firstapp.clientes.*
 import com.example.firstapp.databinding.FragmentFirstBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.properties.ObservableProperty
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -34,9 +34,13 @@ class FirstFragment : Fragment() {
     //Comunicador
     private  lateinit var commCliente: ClienteComunicator
 
+    //observables
+    var repo = ClientesRepository();
+
+
     private lateinit var adapterClientes: ClientesAdapter
     private var listaCLientesMuteable =  mutableListOf<ClienteModel>()
-
+    private var loadingInfo = true
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +50,11 @@ class FirstFragment : Fragment() {
         commCliente =requireActivity() as ClienteComunicator
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+
+
+
+        repo.statusText.observe(viewLifecycleOwner)  { it -> view?.findViewById<Button>(R.id.btnRecargar)?.text = it}
+        repo.enableValueBoton.observe(viewLifecycleOwner) {it -> view?.findViewById<Button>(R.id.btnRecargar)?.isEnabled = it}
 
         return binding.root
 
@@ -77,7 +86,26 @@ class FirstFragment : Fragment() {
 
     }
 
-    fun ObtenerClientes() {
+    private fun setLoadingInfo(isLoading : Boolean = true) {
+
+        if (!isLoading)
+        {
+            repo.setEstatus("Recargar")
+
+            Log.d("data", "----------------CARGADO---------------")
+        }
+
+        repo.setEnableButton(!isLoading)
+        Log.d("data", "----------------${isLoading.toString()}---------------")
+
+
+
+    }
+
+    private fun obtenerClientes() {
+
+        this.setLoadingInfo(true);
+
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
@@ -87,6 +115,9 @@ class FirstFragment : Fragment() {
 
                 activity?.runOnUiThread() {
                     val clientes  = call.body().orEmpty()
+
+                    Thread.sleep(1000);
+
                     if (call.isSuccessful){
                         //show
                         listaCLientesMuteable.clear()
@@ -104,8 +135,11 @@ class FirstFragment : Fragment() {
                         //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
                     }
 
+                    setLoadingInfo(false)
 
                 }
+
+
             }
 
             catch (e: Exception) {
@@ -114,6 +148,8 @@ class FirstFragment : Fragment() {
 
 
         }
+        Log.d("Carga", "fin")
+
     }
 
     private fun showError() {
@@ -125,10 +161,10 @@ class FirstFragment : Fragment() {
 
         /*Mandar el parametro de la vista*/
         this.iniciar(view)
-        this.ObtenerClientes()
+        this.obtenerClientes()
 
         binding?.btnRecargar?.text ="Recargar"
-        binding?.btnRecargar?.setOnClickListener { ObtenerClientes() }
+        binding?.btnRecargar?.setOnClickListener { obtenerClientes() }
 
         binding.buttonFirst.setOnClickListener {
             //findNavController().navigate(R.id.action_FirstFragment_to_ClientesFragment)
