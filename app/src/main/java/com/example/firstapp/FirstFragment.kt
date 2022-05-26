@@ -91,16 +91,16 @@ class FirstFragment : Fragment() {
 
     private fun setLoadingInfo(isLoading : Boolean = true) {
 
-        //repo.setEstatus("Cargando...")
+        repo.setEstatus("Cargando...")
 
         if (!isLoading)
         {
-           // repo.setEstatus("Recargar")
+           repo.setEstatus("Recargar")
 
             Log.d("data", "----------------CARGADO---------------")
         }
 
-        //repo.setEnableButton(!isLoading)
+        repo.setEnableButton(!isLoading)
         Log.d("data", "----------------${isLoading.toString()}---------------")
 
 
