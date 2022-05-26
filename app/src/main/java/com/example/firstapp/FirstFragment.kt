@@ -1,5 +1,6 @@
 package com.example.firstapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,18 +36,19 @@ class FirstFragment : Fragment() {
     private  lateinit var commCliente: ClienteComunicator
 
     //observables
-    var repo = ClientesRepository();
+    var repo = ClientesRepository()
 
 
     private lateinit var adapterClientes: ClientesAdapter
     private var listaCLientesMuteable =  mutableListOf<ClienteModel>()
     private var loadingInfo = true
-    private var intentConection = 0;
+    private var intentConection = 0
 
+    @SuppressLint("CutPasteId")
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         commCliente =requireActivity() as ClienteComunicator
 
@@ -89,14 +91,16 @@ class FirstFragment : Fragment() {
 
     private fun setLoadingInfo(isLoading : Boolean = true) {
 
+        //repo.setEstatus("Cargando...")
+
         if (!isLoading)
         {
-            repo.setEstatus("Recargar")
+           // repo.setEstatus("Recargar")
 
             Log.d("data", "----------------CARGADO---------------")
         }
 
-        repo.setEnableButton(!isLoading)
+        //repo.setEnableButton(!isLoading)
         Log.d("data", "----------------${isLoading.toString()}---------------")
 
 
@@ -105,7 +109,7 @@ class FirstFragment : Fragment() {
 
     private fun obtenerClientes() {
 
-        this.setLoadingInfo(true);
+        this.setLoadingInfo(true)
 
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -117,7 +121,7 @@ class FirstFragment : Fragment() {
                 activity?.runOnUiThread() {
                     val clientes  = call.body().orEmpty()
 
-                    Thread.sleep(1000);
+                    Thread.sleep(1000)
 
                     if (call.isSuccessful){
                         //show
@@ -125,7 +129,7 @@ class FirstFragment : Fragment() {
 
                         clientes.forEach { clienteModel -> listaCLientesMuteable.add(clienteModel)  }
 
-                        adapterClientes.notifyDataSetChanged()
+                        //adapterClientes.notifyDataSetChanged()
 
 
                         Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
@@ -169,11 +173,10 @@ class FirstFragment : Fragment() {
 
         /*Mandar el parametro de la vista*/
         this.iniciar(view)
-        this.intentConection = 1;
+        this.intentConection = 1
         this.obtenerClientes()
 
-        binding?.btnRecargar?.text ="Recargar"
-        binding?.btnRecargar?.setOnClickListener { obtenerClientes() }
+        binding.btnRecargar.setOnClickListener { obtenerClientes() }
 
         binding.buttonFirst.setOnClickListener {
             //findNavController().navigate(R.id.action_FirstFragment_to_ClientesFragment)

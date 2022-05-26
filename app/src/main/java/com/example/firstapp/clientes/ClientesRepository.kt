@@ -17,12 +17,13 @@ class ClientesRepository : ViewModel() {
 
 
     fun setEstatus( texto: String) {
-        statusLiveData.value = texto;
 
+        statusLiveData.postValue(texto)
     }
 
     fun setEnableButton(isEnable: Boolean) {
-        enableBotonRecargarLiveData.value = isEnable;
+
+        enableBotonRecargarLiveData.postValue(isEnable)
     }
 
 }
