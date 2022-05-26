@@ -107,6 +107,7 @@ class FirstFragment : Fragment() {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun obtenerClientes() {
 
         this.setLoadingInfo(true)
@@ -129,7 +130,7 @@ class FirstFragment : Fragment() {
 
                         clientes.forEach { clienteModel -> listaCLientesMuteable.add(clienteModel)  }
 
-                        //adapterClientes.notifyDataSetChanged()
+                        adapterClientes.notifyDataSetChanged()
 
 
                         Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
