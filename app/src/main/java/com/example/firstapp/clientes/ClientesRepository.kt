@@ -15,7 +15,6 @@ class ClientesRepository : ViewModel() {
     val enableValueBoton : LiveData<Boolean> = enableBotonRecargarLiveData
 
 
-
     fun setEstatus( texto: String) {
 
         statusLiveData.postValue(texto)

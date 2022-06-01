@@ -9,7 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="field_text">#FFF2FFFF</color>
     <color name="red">#c3002f</color>
-    <color name="azul">#0b0d88</color>
+    <color name="azul">#283593</color>
     <color name="fondo1">#E1E2E1</color>
     <color name="ligero">#90caf9</color>
+    <color name="success">#1b5e20</color>
 </resources>

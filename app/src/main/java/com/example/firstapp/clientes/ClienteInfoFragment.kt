@@ -1,7 +1,10 @@
 package com.example.firstapp.clientes
 
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
@@ -60,6 +64,9 @@ class ClienteInfoFragment : Fragment() {
 
     private var fragmentClienteBinding: FragmentClienteInfoBinding? = null
 
+    //mutable
+    var repoMonto = ClienteInfoRepository();
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -73,8 +80,6 @@ class ClienteInfoFragment : Fragment() {
         inputNombre =arguments?.getString("nombre_txt")
         inputIdCliente = arguments?.getInt("idCliente")
 
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,16 +90,66 @@ class ClienteInfoFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.txtNombre).text = inputNombre.orEmpty()
 
+        view?.findViewById<EditText>(R.id.txtMontoPago)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(textData: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                repoMonto.setMonto(returnDefaultFloatString(textData.toString()))
+            }
+
+            override fun onTextChanged(textData: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                repoMonto.setMonto(returnDefaultFloatString(textData.toString()))
+            }
+
+            override fun afterTextChanged(textData: Editable?) {
+
+                repoMonto.setMonto(returnDefaultFloatString(textData.toString()))
+            }
+        })
+
         this.ObtenerInfoCliente()
 
-        view.findViewById<EditText>(R.id.txtFecha).setOnClickListener { showModalFecha() }
+        view.findViewById<EditText>(R.id.txtFecha).apply {
+            setOnClickListener {
+                showModalFecha()
+            }
+            setOnFocusChangeListener { view, isFocused ->
+                Log.d("isFocused---", isFocused.toString())
+                if (isFocused){
+                    showModalFecha()
+                }
+            }
+        }
+
+        fragmentClienteBinding?.txtMulta?.setSelectAllOnFocus(true);
+        view.findViewById<EditText>(R.id.txtMulta).setSelectAllOnFocus(true);
 
         view.findViewById<Button>(R.id.btnPagar).setOnClickListener{
-            GuardarPago()
+
+            val dialogbuilderConfirmation = AlertDialog.Builder(context);
+
+            dialogbuilderConfirmation.apply {
+                setMessage(R.string.dialogMensajeGuardarPago)
+                setTitle(R.string.dialogTituloGuardarPago)
+                setNegativeButton(R.string.dialogCancel) { view, _ ->
+                    view.dismiss()
+                }
+                setPositiveButton(R.string.dialogAceptarPago) { viewDialog, _->
+
+                    GuardarPago()
+
+                    viewDialog.dismiss()
+                }
+            }
+
+            dialogbuilderConfirmation.show()
+
             //this.imprimirTicket()
             //var moduloImpresora : ModuloImpresora = ModuloImpresora()
             //moduloImpresora.imprimirTicket(PagoViewModel(1,1,125f,0f,"luis ricardo","1", 20f, "hoy", "hoy",1,1, ""))
         }
+
+
 
         view.findViewById<Button>(R.id.btnVerPagos).setOnClickListener {
             findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment, arguments)
@@ -105,6 +160,15 @@ class ClienteInfoFragment : Fragment() {
 
 
 
+    }
+
+    fun returnDefaultFloatString(value: String) : Float {
+
+        if (value.isEmpty()){
+            return 0f;
+        }
+
+        return value.toFloat();
     }
 
     fun pagoRetroFit() : Retrofit {
@@ -133,37 +197,27 @@ class ClienteInfoFragment : Fragment() {
 
             var responseInfo = call.body()
 
+            var pendienteTexto : String = "-";
+            var ultimoPago : String = "-";
+
             activity?.runOnUiThread() {
                 if (call.isSuccessful)
                 {
 
-
-                    var pendienteTexto : String = "";
-                    var ultimoPago : String = "";
-
                     if (responseInfo?.idCredito != null)
                     {
 
-                        pendienteTexto = responseInfo?.pendientePago.toString().orEmpty()
-                        ultimoPago = responseInfo?.fechaUltimoPago.toString().orEmpty()
-
-                        inputIdCredito = responseInfo?.idCredito
-
+                        inputIdCredito = responseInfo.idCredito
+                        arguments?.putInt("idCredito", inputIdCredito);
                         view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.VISIBLE
 
                     }
                     else
                     {
                         pendienteTexto = "NO HAY CREDITO ACTIVO"
-
                         inputIdCliente = 0;
-
                         view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
                     }
-
-                    view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
-                    view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
-
 
                 }
                 else
@@ -173,6 +227,18 @@ class ClienteInfoFragment : Fragment() {
                 }
             }
 
+            val callCredito = pagoRetroFit().create(ApiPagoService::class.java).credito(inputIdCredito)
+
+            var responseCredito = callCredito.body()
+            activity?.runOnUiThread() {
+                if (callCredito.isSuccessful) {
+                    pendienteTexto = responseCredito?.pendientePago.toString().orEmpty()
+                    ultimoPago = responseCredito?.fechaUltimoPago.toString().orEmpty()
+                }
+
+                view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
+                view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
+            }
         }
     }
 
@@ -219,8 +285,12 @@ class ClienteInfoFragment : Fragment() {
 
         var newPagoDate = this.fechaPago
 
+
+
         CoroutineScope(Dispatchers.IO).launch {
-            var monto = view?.findViewById<EditText>(R.id.txtMontoPago).toString().toFloat();
+
+            var monto =  returnDefaultFloatString(repoMonto.monto.value.toString());
+
 
             var pago: PagoModel = PagoModel(0, inputIdCredito, monto = monto, descuento = 0f,
                     faltaDePago = 0f, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1, observacion = ""  )
@@ -234,8 +304,11 @@ class ClienteInfoFragment : Fragment() {
                 if (call.isSuccessful){
                     //show
                     Log.d("DATOS", responsePago.toString())
+                    view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
+                    Toast.makeText(context, "GUARDADO", Toast.LENGTH_LONG).show()
 
-
+                    ObtenerInfoCliente()
+                    findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment, arguments)
                 }
                 else {
 
@@ -313,6 +386,7 @@ class ClienteInfoFragment : Fragment() {
         var fechaData = "$year-${ (month + 1).toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}"
         view?.findViewById<EditText>(R.id.txtFecha)?.setText(fechaData)
         this.fechaPago = fechaData
+        view?.findViewById<Button>(R.id.btnPagar)?.requestFocus()
     }
 
     override fun onCreateView(
@@ -321,7 +395,6 @@ class ClienteInfoFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        //para el binding de la data
 
 
         return inflater.inflate(R.layout.fragment_cliente_info, container, false)

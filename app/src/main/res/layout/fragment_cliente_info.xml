@@ -164,7 +164,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lblMulta"
-                    android:textSize="20dp"
+                    android:textSize="23sp"
+                    android:text="0.00"
+                    android:textAlignment="center"
                     android:ems="5"
                     android:inputType="numberDecimal"
                     />
@@ -194,10 +196,11 @@
                     android:startYear="2022"
                     android:background="@color/field_text"
                     android:clickable="false"
-                    android:focusable="false"
+                    android:focusable="true"
                     app:layout_constraintTop_toBottomOf="@id/labelFecha"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:nextFocusDown="@id/btnPagar"
                     />
 
                 <Button
@@ -208,6 +211,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:text="@string/abonar"
+                    android:background="@color/azul"
                     android:visibility="invisible"
                     android:layout_marginTop="25dp"
                     />

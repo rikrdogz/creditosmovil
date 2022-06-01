@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firstapp.clientes.*
@@ -19,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.properties.ObservableProperty
+
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -41,7 +39,6 @@ class FirstFragment : Fragment() {
 
     private lateinit var adapterClientes: ClientesAdapter
     private var listaCLientesMuteable =  mutableListOf<ClienteModel>()
-    private var loadingInfo = true
     private var intentConection = 0
 
     @SuppressLint("CutPasteId")
@@ -153,15 +150,17 @@ class FirstFragment : Fragment() {
 
                 intentConection++
 
-                if (intentConection < 3)
+                if (intentConection < 4)
                 {
                     obtenerClientes()
                 }
+                setLoadingInfo(false)
             }
 
 
         }
-        Log.d("Carga", "fin")
+
+        Log.d("Carga", "fin intento $intentConection")
 
     }
 
@@ -179,10 +178,6 @@ class FirstFragment : Fragment() {
 
         binding.btnRecargar.setOnClickListener { obtenerClientes() }
 
-        binding.buttonFirst.setOnClickListener {
-            //findNavController().navigate(R.id.action_FirstFragment_to_ClientesFragment)
-
-        }
     }
 
 

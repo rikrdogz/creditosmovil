@@ -12,9 +12,12 @@ interface ApiPagoService {
     @POST("/pago")
     suspend fun postGuardarPago(@Body pagoModel :  PagoModel): Response<Number>
 
+    @GET("/creditos/{idCredito}")
+    suspend fun credito(@Path("idCredito") idCredito: Int?): Response<ClienteCreditoActivoViewModel>
+
     @GET("/Creditos/creditoActivo/{idCliente}")
     suspend fun creditoActivo(@Path("idCliente") idCliente : Int?): Response<ClienteCreditoActivoViewModel>
 
-    @GET("/pago/porcliente/{idCliente}")
-    suspend fun obtenerpagos(@Path ("idCliente")  idCliente: Int? ): Response<List<PagoViewModel>>
+    @GET("/pago/credito/{idCredito}")
+    suspend fun obtenerpagos(@Path ("idCredito")  idCredito: Int? ): Response<List<PagoViewModel>>
 }

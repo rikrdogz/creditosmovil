@@ -8,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.firstapp.clientes.ApiCreditoService
 import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoAdapter
-import com.example.firstapp.pagos.PagoModel
 import com.example.firstapp.pagos.PagoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +34,7 @@ class PagosFragment : Fragment() {
 
     private  lateinit var adaptarPagos : PagoAdapter
     private  var listaPagosMuteable = mutableListOf<PagoViewModel>()
-    private  var inputIdCliente: Int? = 0
+    private  var inputIdCredito: Int? = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +44,7 @@ class PagosFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        inputIdCliente = arguments?.getInt("idCliente")
+        inputIdCredito = arguments?.getInt("idCredito")
         this.obtenerPagos()
 
     }
@@ -91,9 +89,9 @@ class PagosFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                Log.d("API", inputIdCliente.toString())
+                Log.d("API", inputIdCredito.toString())
 
-                val call =getPagosRetrofit().create(ApiPagoService::class.java).obtenerpagos(inputIdCliente)
+                val call =getPagosRetrofit().create(ApiPagoService::class.java).obtenerpagos(inputIdCredito)
                 Log.d("DATOS", "----------OTENIENDO------------")
 
 

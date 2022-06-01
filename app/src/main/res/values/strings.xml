@@ -19,4 +19,9 @@
     <string name="clientetitle">Cliente</string>
     <string name="detallepagos">Detalle de pagos</string>
     <string name="imprimir">Imprimir</string>
+
+    <string name="dialogMensajeGuardarPago">Desea guardar este pago?</string>
+    <string name="dialogAceptarPago">Guardar</string>
+    <string name="dialogTituloGuardarPago"></string>
+    <string name="dialogCancel">Cancelar</string>
 </resources>
