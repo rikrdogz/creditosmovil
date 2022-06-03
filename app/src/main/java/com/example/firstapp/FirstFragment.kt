@@ -51,8 +51,6 @@ class FirstFragment : Fragment() {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
-
-
         repo.statusText.observe(viewLifecycleOwner)  { it -> view?.findViewById<Button>(R.id.btnRecargar)?.text = it}
         repo.enableValueBoton.observe(viewLifecycleOwner) {it -> view?.findViewById<Button>(R.id.btnRecargar)?.isEnabled = it}
 
@@ -68,8 +66,6 @@ class FirstFragment : Fragment() {
         rview.layoutManager = LinearLayoutManager(context)
         rview.adapter = adapterClientes
 
-
-
         Log.d("INICIAR", "Iniciando el view")
 
     }
@@ -82,7 +78,6 @@ class FirstFragment : Fragment() {
 
     fun onClienteClick(position: Int) {
         commCliente.passDataCliente(listaCLientesMuteable[position])
-
 
     }
 

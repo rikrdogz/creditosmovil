@@ -22,6 +22,8 @@
 
     <string name="dialogMensajeGuardarPago">Desea guardar este pago?</string>
     <string name="dialogAceptarPago">Guardar</string>
-    <string name="dialogTituloGuardarPago"></string>
+    <string name="dialogTituloGuardarPago">PAGO</string>
     <string name="dialogCancel">Cancelar</string>
+    <string name="observacion">Observacion</string>
+    <string name="hint_ejemplo_4_pago">ejemplo #4 pago</string>
 </resources>

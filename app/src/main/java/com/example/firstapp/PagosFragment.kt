@@ -1,5 +1,6 @@
 package com.example.firstapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -35,6 +36,7 @@ class PagosFragment : Fragment() {
     private  lateinit var adaptarPagos : PagoAdapter
     private  var listaPagosMuteable = mutableListOf<PagoViewModel>()
     private  var inputIdCredito: Int? = 0
+    private  var inputIdPagoRealizado: Int =0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,8 @@ class PagosFragment : Fragment() {
         }
 
         inputIdCredito = arguments?.getInt("idCredito")
+        inputIdPagoRealizado = arguments?.getInt("idPagoRealizado")!!
+        Log.d("idPago", inputIdPagoRealizado.toString())
         this.obtenerPagos()
 
     }
@@ -69,7 +73,7 @@ class PagosFragment : Fragment() {
     fun iniciarRecycler() {
         val rview = view?.findViewById<RecyclerView>(R.id.listPagosRecycler)
 
-        adaptarPagos = PagoAdapter(listaPagosMuteable)
+        adaptarPagos = PagoAdapter(listaPagosMuteable, inputIdPagoRealizado)
 
         rview?.layoutManager = LinearLayoutManager(context)
         rview?.adapter = adaptarPagos
@@ -85,6 +89,7 @@ class PagosFragment : Fragment() {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun obtenerPagos() {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -101,13 +106,9 @@ class PagosFragment : Fragment() {
                         //show
                         listaPagosMuteable.clear()
 
-
                         pagos.forEach { pagoModel -> listaPagosMuteable.add(pagoModel)  }
 
-
-
                         adaptarPagos.notifyDataSetChanged()
-
 
                         Log.d("LISTA", "HAY DATOS ${pagos.size}")
                         //Log.d("LISTA", "Nombre ${pagos[0].nombre}")

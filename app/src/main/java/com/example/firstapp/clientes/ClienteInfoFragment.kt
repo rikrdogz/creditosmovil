@@ -14,18 +14,16 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+
 import androidx.navigation.fragment.findNavController
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.example.firstapp.ErrorResponse
 import com.example.firstapp.HeaderInterceptor
-import com.example.firstapp.ModuloImpresora
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
 import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoModel
-import com.example.firstapp.pagos.PagoViewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -65,7 +63,7 @@ class ClienteInfoFragment : Fragment() {
     private var fragmentClienteBinding: FragmentClienteInfoBinding? = null
 
     //mutable
-    var repoMonto = ClienteInfoRepository();
+    var repoMonto = ClienteInfoRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -88,9 +86,7 @@ class ClienteInfoFragment : Fragment() {
 
         txtName.text = inputNombre.orEmpty()
 
-        view.findViewById<TextView>(R.id.txtNombre).text = inputNombre.orEmpty()
-
-        view?.findViewById<EditText>(R.id.txtMontoPago)?.addTextChangedListener(object : TextWatcher {
+        view.findViewById<EditText>(R.id.txtMontoPago)?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(textData: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 repoMonto.setMonto(returnDefaultFloatString(textData.toString()))
@@ -104,6 +100,20 @@ class ClienteInfoFragment : Fragment() {
             override fun afterTextChanged(textData: Editable?) {
 
                 repoMonto.setMonto(returnDefaultFloatString(textData.toString()))
+            }
+        })
+
+        view.findViewById<EditText>(R.id.txtMulta)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(textData: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                repoMonto.setMuta(returnDefaultFloatString(textData.toString()))
+            }
+
+            override fun onTextChanged(textData: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                repoMonto.setMuta(returnDefaultFloatString(textData.toString()))
+            }
+
+            override fun afterTextChanged(textData: Editable?) {
+                repoMonto.setMuta(returnDefaultFloatString(textData.toString()))
             }
         })
 
@@ -289,11 +299,11 @@ class ClienteInfoFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            var monto =  returnDefaultFloatString(repoMonto.monto.value.toString());
-
+            var monto =  returnDefaultFloatString(repoMonto.monto.value.toString())
+            var multa = returnDefaultFloatString(repoMonto.multa.value.toString())
 
             var pago: PagoModel = PagoModel(0, inputIdCredito, monto = monto, descuento = 0f,
-                    faltaDePago = 0f, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1, observacion = ""  )
+                    faltaDePago = multa, fechaCreacion = newPagoDate , fechaPago = newPagoDate, idUsuario = 1, estatusId = 1, observacion = ""  )
 
             val call =pagoRetroFit().create(ApiPagoService::class.java).postGuardarPago(pago)
             Log.d("DATOS", "----------ENVIANDO------------")
@@ -307,7 +317,8 @@ class ClienteInfoFragment : Fragment() {
                     view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
                     Toast.makeText(context, "GUARDADO", Toast.LENGTH_LONG).show()
 
-                    ObtenerInfoCliente()
+                    //ObtenerInfoCliente()
+                    arguments?.putInt("idPagoRealizado", responsePago!!.toInt())
                     findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment, arguments)
                 }
                 else {

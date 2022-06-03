@@ -39,13 +39,13 @@
         tools:text="$150.00"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textFontWeight="800"
         android:minWidth="150dp"
         app:layout_constraintStart_toEndOf="@id/txtFechaPago"
         app:layout_constraintEnd_toStartOf="@id/txtNumero"
         app:layout_constraintTop_toBottomOf="@id/txtNombre"
         app:layout_constraintBottom_toBottomOf="@id/txtFechaPago"
         android:layout_marginLeft="10dp"
+        android:textAlignment="center"
         />
 
     <TextView
@@ -68,6 +68,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtMontoPago"
+        />
+
+    <TextView
+        android:id="@+id/lblFechaCreacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="hace 1 segundo"
+        app:layout_constraintStart_toEndOf="@+id/btnImprimir"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

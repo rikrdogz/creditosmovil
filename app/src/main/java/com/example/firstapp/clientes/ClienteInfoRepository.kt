@@ -6,22 +6,28 @@ import androidx.lifecycle.ViewModel
 
 class ClienteInfoRepository : ViewModel() {
 
-    private val creditoIdLiveData = MutableLiveData<Int>(0);
+    private val creditoIdLiveData = MutableLiveData<Int>(0)
     val creditoId: LiveData<Int> = creditoIdLiveData;
 
-    private  val montoLiveData = MutableLiveData<Float>(0f);
+    private  val montoLiveData = MutableLiveData<Float>(0f)
     val monto : LiveData<Float> = montoLiveData;
 
-    private  val guardadoLiveData = MutableLiveData<Boolean>(false);
+    private  val guardadoLiveData = MutableLiveData<Boolean>(false)
     val guardado : LiveData<Boolean> = guardadoLiveData;
 
+    private val multaLiveData = MutableLiveData<Float>(0f)
+    val multa : LiveData<Float> = multaLiveData
 
     fun setCreditoId( value:Int) {
         creditoIdLiveData.postValue(value)
     }
 
     fun setGuardado(value: Boolean) {
-        guardadoLiveData.postValue(value);
+        guardadoLiveData.postValue(value)
+    }
+
+    fun setMuta(value: Float) {
+        multaLiveData.postValue(value)
     }
 
     fun setMonto(value: Float) {
