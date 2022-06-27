@@ -41,7 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="10dp"
-                android:background="@color/fondo1"
+                android:background="@color/bg_secundary"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:padding="10dp"
@@ -54,10 +55,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ver Pagos"
+                    android:background="@color/bg_primary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="5dp"
+                    android:letterSpacing="0.3"
                     />
 
                 <TextView
@@ -65,10 +68,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Debe"
+                    android:letterSpacing="0.4"
+                    android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btnVerPagos"
                     android:textSize="20sp"
+                    android:layout_marginTop="15dp"
                     />
                 <TextView
                     android:id="@+id/lblDebe"
@@ -80,8 +86,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lblTituloDebe"
-                    android:textColor="@color/red"
-                    android:textSize="25sp"
+                    android:textColor="@color/white"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
                     />
 
                 <TextView
@@ -89,10 +96,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ultimo Pago"
+                    android:textColor="@color/white"
+                    android:letterSpacing="0.4"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lblDebe"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     />
 
                 <TextView
@@ -101,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:background="@color/white"
+                    android:padding="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lblultimoPago"
@@ -146,6 +156,7 @@
                     android:layout_marginTop="10dp"
                     android:textSize="40sp"
                     android:ems="5"
+                    android:hint="ej. $150"
                     android:inputType="numberDecimal" />
 
                 <TextView

@@ -20,6 +20,7 @@ import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
 import com.example.firstapp.ErrorResponse
 import com.example.firstapp.HeaderInterceptor
+import com.example.firstapp.MainActivity
 import com.example.firstapp.R
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
 import com.example.firstapp.pagos.ApiPagoService
@@ -64,6 +65,8 @@ class ClienteInfoFragment : Fragment() {
 
     //mutable
     var repoMonto = ClienteInfoRepository()
+
+    private var creditoApp = MainActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -185,7 +188,7 @@ class ClienteInfoFragment : Fragment() {
 
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
-        return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
+        return Retrofit.Builder().baseUrl(creditoApp.baseUrlApp)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(pagoClient())
             .build()
@@ -216,17 +219,17 @@ class ClienteInfoFragment : Fragment() {
 
                     if (responseInfo?.idCredito != null)
                     {
-
+                        Log.d("idCredito CALL", responseInfo.idCredito.toString());
                         inputIdCredito = responseInfo.idCredito
                         arguments?.putInt("idCredito", inputIdCredito);
-                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.VISIBLE
+
 
                     }
                     else
                     {
                         pendienteTexto = "NO HAY CREDITO ACTIVO"
                         inputIdCliente = 0;
-                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
+
                     }
 
                 }
@@ -242,8 +245,18 @@ class ClienteInfoFragment : Fragment() {
             var responseCredito = callCredito.body()
             activity?.runOnUiThread() {
                 if (callCredito.isSuccessful) {
-                    pendienteTexto = responseCredito?.pendientePago.toString().orEmpty()
-                    ultimoPago = responseCredito?.fechaUltimoPago.toString().orEmpty()
+
+                    if (responseCredito?.pendientePago.toString() != "null")
+                    {
+                        pendienteTexto = responseCredito?.pendientePago.toString().orEmpty()
+                        ultimoPago = responseCredito?.fechaUltimoPago.toString().orEmpty()
+                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.VISIBLE
+                    }
+                    else
+                    {
+                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
+                    }
+
                 }
 
                 view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto

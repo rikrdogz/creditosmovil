@@ -13,4 +13,7 @@
     <color name="fondo1">#E1E2E1</color>
     <color name="ligero">#90caf9</color>
     <color name="success">#1b5e20</color>
+    <color name="bg_primary">#3E43CD</color>
+    <color name="bg_secundary">#FE754F</color>
+    <color name="bg_menu">#1D1E6D</color>
 </resources>

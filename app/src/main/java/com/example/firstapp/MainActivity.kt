@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(), ClienteComunicator {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    var baseUrlApp : String = if (BuildConfig.DEBUG) "http://creditosdev.azurewebsites.net/" else "https://creditosbellely.azurewebsites.net/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,11 @@ class MainActivity : AppCompatActivity(), ClienteComunicator {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        if (BuildConfig.DEBUG)
+        {
+            Toast.makeText(this,"MODO DESARROLLO", Toast.LENGTH_LONG).show();
+        }
 
         /*Revisar Permisos*/
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED )

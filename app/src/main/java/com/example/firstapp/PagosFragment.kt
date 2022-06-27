@@ -37,7 +37,7 @@ class PagosFragment : Fragment() {
     private  var listaPagosMuteable = mutableListOf<PagoViewModel>()
     private  var inputIdCredito: Int? = 0
     private  var inputIdPagoRealizado: Int =0
-
+    private var creditoApp = MainActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +83,7 @@ class PagosFragment : Fragment() {
     }
 
     fun getPagosRetrofit() : Retrofit {
-        return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
+        return Retrofit.Builder().baseUrl(creditoApp.baseUrlApp)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

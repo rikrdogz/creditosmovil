@@ -41,6 +41,8 @@ class FirstFragment : Fragment() {
     private var listaCLientesMuteable =  mutableListOf<ClienteModel>()
     private var intentConection = 0
 
+    private var creditoApp = MainActivity()
+
     @SuppressLint("CutPasteId")
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +73,7 @@ class FirstFragment : Fragment() {
     }
 
     fun getClientesRetroFit() : Retrofit {
-        return Retrofit.Builder().baseUrl("http://creditosdev.azurewebsites.net/")
+        return Retrofit.Builder().baseUrl(creditoApp.baseUrlApp)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
