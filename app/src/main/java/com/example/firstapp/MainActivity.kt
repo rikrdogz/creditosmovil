@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), ClienteComunicator {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    var baseUrlApp : String = if (BuildConfig.DEBUG) "http://creditosdev.azurewebsites.net/" else "https://creditosbellely.azurewebsites.net/"
+    var baseUrlApp : String = if (!BuildConfig.DEBUG) "http://creditosdev.azurewebsites.net/" else "https://creditosbellely.azurewebsites.net/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

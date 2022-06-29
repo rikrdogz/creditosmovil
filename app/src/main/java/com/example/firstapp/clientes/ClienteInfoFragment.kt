@@ -201,12 +201,10 @@ class ClienteInfoFragment : Fragment() {
     }
 
     fun ObtenerInfoCliente(){
+        Toast.makeText(context, inputIdCliente.toString(), Toast.LENGTH_SHORT).show()
         CoroutineScope(Dispatchers.IO).launch {
 
-
-
             val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
-
 
             var responseInfo = call.body()
 
@@ -235,7 +233,7 @@ class ClienteInfoFragment : Fragment() {
                 }
                 else
                 {
-                    view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO CREDITO ACTIVO"
+                    view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO CREDITO ACTIVO!"
                     Log.d("DATOS", "NO OBTENIDOS")
                 }
             }
@@ -262,6 +260,7 @@ class ClienteInfoFragment : Fragment() {
                 view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
                 view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
             }
+
         }
     }
 
@@ -308,7 +307,7 @@ class ClienteInfoFragment : Fragment() {
 
         var newPagoDate = this.fechaPago
 
-
+        view?.findViewById<TextView>(R.id.lblProblema)?.text = ""
 
         CoroutineScope(Dispatchers.IO).launch {
 

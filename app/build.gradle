@@ -4,6 +4,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\RICARDO\\Documents\\AndriodApkProduccion\\FirstApp.jks')
+            storePassword 'Rikrdogz7'
+            keyAlias 'FirstAppKey'
+            keyPassword 'Rikrdogz7'
+        }
+    }
     compileSdk 32
 
     defaultConfig {
@@ -20,6 +28,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable false
         }
     }
     compileOptions {
