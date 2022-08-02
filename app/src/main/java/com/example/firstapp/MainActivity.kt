@@ -3,10 +3,13 @@ package com.example.firstapp
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,12 +20,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.firstapp.clientes.ClienteComunicator
 import com.example.firstapp.clientes.ClienteModel
 import com.example.firstapp.databinding.ActivityMainBinding
+import com.example.firstapp.databinding.ContentMainBinding
 import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity(), ClienteComunicator {
+class MainActivity : AppCompatActivity(), ClienteComunicator, MainCommunicator {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private var BarraDeProgreso : ProgressBar? = null;
+
     var baseUrlApp : String = if (!BuildConfig.DEBUG) "http://creditosdev.azurewebsites.net/" else "https://creditosbellely.azurewebsites.net/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +42,8 @@ class MainActivity : AppCompatActivity(), ClienteComunicator {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        BarraDeProgreso = findViewById(R.id.barraDeProgreso)
 
         if (BuildConfig.DEBUG)
         {
@@ -75,6 +83,20 @@ class MainActivity : AppCompatActivity(), ClienteComunicator {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    override fun showLoadingBar(isVisibleBar: Boolean) {
+
+        if (isVisibleBar)
+        {
+
+            BarraDeProgreso?.visibility = View.VISIBLE
+        }
+        else
+        {
+            BarraDeProgreso?.visibility  = View.GONE
+        }
+
     }
 
     override fun passDataCliente(cliente: ClienteModel) {

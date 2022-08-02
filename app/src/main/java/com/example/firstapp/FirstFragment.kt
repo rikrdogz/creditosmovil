@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ class FirstFragment : Fragment() {
 
     //Comunicador
     private  lateinit var commCliente: ClienteComunicator
+    private  lateinit var commMain: MainCommunicator
 
     //observables
     var repo = ClientesRepository()
@@ -50,8 +52,11 @@ class FirstFragment : Fragment() {
     ): View {
 
         commCliente =requireActivity() as ClienteComunicator
+        commMain = requireActivity() as MainCommunicator
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+
+        commMain.showLoadingBar(true);
 
         repo.statusText.observe(viewLifecycleOwner)  { it -> view?.findViewById<Button>(R.id.btnRecargar)?.text = it}
         repo.enableValueBoton.observe(viewLifecycleOwner) {it -> view?.findViewById<Button>(R.id.btnRecargar)?.isEnabled = it}
@@ -93,7 +98,7 @@ class FirstFragment : Fragment() {
 
             Log.d("data", "----------------CARGADO---------------")
         }
-
+        commMain.showLoadingBar(isLoading);
         repo.setEnableButton(!isLoading)
         Log.d("data", "----------------${isLoading.toString()}---------------")
 
@@ -116,7 +121,7 @@ class FirstFragment : Fragment() {
                 activity?.runOnUiThread() {
                     val clientes  = call.body().orEmpty()
 
-                    Thread.sleep(1000)
+                    //Thread.sleep(1000)
 
                     if (call.isSuccessful){
                         //show
@@ -149,6 +154,7 @@ class FirstFragment : Fragment() {
 
                 if (intentConection < 4)
                 {
+                    Toast.makeText(context, "intento # ${intentConection}", Toast.LENGTH_SHORT).show();
                     obtenerClientes()
                 }
                 setLoadingInfo(false)

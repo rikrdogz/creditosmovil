@@ -3,6 +3,7 @@ package com.example.firstapp.clientes
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -15,13 +16,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
+
 import androidx.navigation.fragment.findNavController
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
-import com.example.firstapp.ErrorResponse
-import com.example.firstapp.HeaderInterceptor
-import com.example.firstapp.MainActivity
-import com.example.firstapp.R
+import com.example.firstapp.*
 import com.example.firstapp.databinding.FragmentClienteInfoBinding
 import com.example.firstapp.pagos.ApiPagoService
 import com.example.firstapp.pagos.PagoModel
@@ -62,9 +61,13 @@ class ClienteInfoFragment : Fragment() {
     private  var inputIdCredito: Int = 0
 
     private var fragmentClienteBinding: FragmentClienteInfoBinding? = null
+    private val handler = Handler()
 
     //mutable
     var repoMonto = ClienteInfoRepository()
+
+    //communicator
+    private  lateinit var commMain: MainCommunicator
 
     private var creditoApp = MainActivity()
 
@@ -86,6 +89,10 @@ class ClienteInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         var txtName = view.findViewById<TextView>(R.id.txtNombre)
+
+        commMain = requireActivity() as MainCommunicator
+
+
 
         txtName.text = inputNombre.orEmpty()
 
@@ -202,66 +209,81 @@ class ClienteInfoFragment : Fragment() {
 
     fun ObtenerInfoCliente(){
         Toast.makeText(context, inputIdCliente.toString(), Toast.LENGTH_SHORT).show()
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
-
-            var responseInfo = call.body()
-
-            var pendienteTexto : String = "-";
-            var ultimoPago : String = "-";
-
-            activity?.runOnUiThread() {
-                if (call.isSuccessful)
-                {
-
-                    if (responseInfo?.idCredito != null)
-                    {
-                        Log.d("idCredito CALL", responseInfo.idCredito.toString());
-                        inputIdCredito = responseInfo.idCredito
-                        arguments?.putInt("idCredito", inputIdCredito);
 
 
+
+
+        Thread(Runnable {
+            handler.post(Runnable {
+                commMain.showLoadingBar(true)
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
+
+                    var responseInfo = call.body()
+
+                    var pendienteTexto : String = "-";
+                    var ultimoPago : String = "-";
+
+                    activity?.runOnUiThread() {
+                        if (call.isSuccessful)
+                        {
+
+                            if (responseInfo?.idCredito != null)
+                            {
+                                Log.d("idCredito CALL", responseInfo.idCredito.toString());
+                                inputIdCredito = responseInfo.idCredito
+                                arguments?.putInt("idCredito", inputIdCredito);
+
+
+                            }
+                            else
+                            {
+                                pendienteTexto = "NO HAY CREDITO ACTIVO"
+                                inputIdCliente = 0;
+
+                            }
+
+                        }
+                        else
+                        {
+                            view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO CREDITO ACTIVO!"
+                            Log.d("DATOS", "NO OBTENIDOS")
+                        }
                     }
-                    else
-                    {
-                        pendienteTexto = "NO HAY CREDITO ACTIVO"
-                        inputIdCliente = 0;
 
+                    val callCredito = pagoRetroFit().create(ApiPagoService::class.java).credito(inputIdCredito)
+
+                    var responseCredito = callCredito.body()
+                    activity?.runOnUiThread() {
+                        if (callCredito.isSuccessful) {
+
+                            if (responseCredito?.pendientePago.toString() != "null")
+                            {
+                                pendienteTexto = responseCredito?.pendientePago.toString().orEmpty()
+                                ultimoPago = responseCredito?.fechaUltimoPago.toString().orEmpty()
+                                view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.VISIBLE
+                            }
+                            else
+                            {
+                                view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
+                            }
+
+                        }
+
+                        view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
+                        view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
                     }
 
                 }
-                else
-                {
-                    view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO CREDITO ACTIVO!"
-                    Log.d("DATOS", "NO OBTENIDOS")
-                }
-            }
+                commMain.showLoadingBar(false)
+            })
 
-            val callCredito = pagoRetroFit().create(ApiPagoService::class.java).credito(inputIdCredito)
 
-            var responseCredito = callCredito.body()
-            activity?.runOnUiThread() {
-                if (callCredito.isSuccessful) {
+        }).start()
 
-                    if (responseCredito?.pendientePago.toString() != "null")
-                    {
-                        pendienteTexto = responseCredito?.pendientePago.toString().orEmpty()
-                        ultimoPago = responseCredito?.fechaUltimoPago.toString().orEmpty()
-                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.VISIBLE
-                    }
-                    else
-                    {
-                        view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
-                    }
 
-                }
 
-                view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
-                view?.findViewById<TextView>(R.id.txtUltimoPago)?.text = ultimoPago
-            }
-
-        }
     }
 
     fun imprimirTicket() {
@@ -395,9 +417,6 @@ class ClienteInfoFragment : Fragment() {
         }
     }
 
-
-
-
     private fun showModalFecha(){
         val datePicker = FechaDateTimePicker{day, month, year -> onDateSelected(day, month, year) }
 
@@ -418,7 +437,7 @@ class ClienteInfoFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-
+        commMain = requireActivity() as MainCommunicator
 
         return inflater.inflate(R.layout.fragment_cliente_info, container, false)
     }
