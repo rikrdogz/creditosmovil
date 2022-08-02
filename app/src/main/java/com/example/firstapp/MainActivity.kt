@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), ClienteComunicator, MainCommunicator {
     private lateinit var binding: ActivityMainBinding
     private var BarraDeProgreso : ProgressBar? = null;
 
-    var baseUrlApp : String = if (!BuildConfig.DEBUG) "http://creditosdev.azurewebsites.net/" else "https://creditosbellely.azurewebsites.net/"
+    var baseUrlApp : String = if (BuildConfig.DEBUG) "http://creditosdev.azurewebsites.net/" else "https://creditosbellely.azurewebsites.net/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

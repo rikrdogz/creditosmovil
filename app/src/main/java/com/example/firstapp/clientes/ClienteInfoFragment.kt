@@ -235,12 +235,24 @@ class ClienteInfoFragment : Fragment() {
                     inputIdCredito = responseInfo.idCredito
                     arguments?.putInt("idCredito", inputIdCredito);
 
+                    if (responseInfo.idCredito == 0)
+                    {
+                        withContext(Dispatchers.Main) {
+                            view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO TIENE CREDITO ACTIVO"
+                            commMain.showLoadingBar(false)
+                        }
+                    }
 
                 }
                 else
                 {
                     pendienteTexto = "NO HAY CREDITO ACTIVO"
                     inputIdCliente = 0;
+
+                    withContext(Dispatchers.Main) {
+                        view?.findViewById<TextView>(R.id.lblDebe)?.text = pendienteTexto
+                        commMain.showLoadingBar(false)
+                    }
 
                 }
 
@@ -249,6 +261,7 @@ class ClienteInfoFragment : Fragment() {
             {
                 withContext(Dispatchers.Main) {
                     view?.findViewById<TextView>(R.id.lblDebe)?.text = "NO CREDITO ACTIVO!"
+                    commMain.showLoadingBar(false)
                 }
 
                 Log.d("DATOS", "NO OBTENIDOS")
@@ -342,6 +355,10 @@ class ClienteInfoFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
+            withContext(Dispatchers.Main) {
+                commMain.showLoadingBar(true)
+            }
+
             var monto =  returnDefaultFloatString(repoMonto.monto.value.toString())
             var multa = returnDefaultFloatString(repoMonto.multa.value.toString())
 
@@ -353,73 +370,74 @@ class ClienteInfoFragment : Fragment() {
 
             val responsePago  = call.body()
 
-            activity?.runOnUiThread() {
-                if (call.isSuccessful){
-                    //show
-                    Log.d("DATOS", responsePago.toString())
+            if (call.isSuccessful){
+                //show
+                Log.d("DATOS", responsePago.toString())
+
+                withContext(Dispatchers.Main) {
                     view?.findViewById<Button>(R.id.btnPagar)?.visibility = View.INVISIBLE
                     Toast.makeText(context, "GUARDADO", Toast.LENGTH_LONG).show()
+                }
 
-                    //ObtenerInfoCliente()
-                    arguments?.putInt("idPagoRealizado", responsePago!!.toInt())
+                //ObtenerInfoCliente()
+                arguments?.putInt("idPagoRealizado", responsePago!!.toInt())
+
+                withContext(Dispatchers.Main) {
                     findNavController().navigate(R.id.action_ClienteInfoFragment_to_pagosFragment, arguments)
                 }
-                else {
 
+            }
+            else {
+
+                withContext(Dispatchers.Main) {
                     Toast.makeText(context, "NO SE PUDO GUARDAR EL PAGO", Toast.LENGTH_SHORT).show()
-
-                    var jsonObject = JSONObject()
-                    var textReponse : String = call.errorBody()!!.charStream().readText()
-                    textReponse = textReponse.replace("$", "")
-                    Log.d("RESPONSE", textReponse )
-
-                    var problemaGeneral : String = ""
-
-                    try {
-
-
-                        try {
-                            /*Intenerar convertir a json si tiene formato*/
-                            JSONObject(textReponse)
-
-
-                        } catch (e: JSONException) {
-                            Log.d("PROBLEMA", "No es JSON" )
-
-                            /*Se mostrara el erros que venga*/
-                            problemaGeneral = textReponse;
-                            throw Exception("No es FORMATO JSON")
-
-                        }
-
-                        /*Convertir a tipo ErrorResponse*/
-                        if (JSONObject(textReponse).has("errors"))
-                        {
-                            var myObjet = Gson().fromJson(textReponse, ErrorResponse::class.java)
-
-                            var errorData = JSONObject(myObjet.errors.toString())
-
-                            problemaGeneral = errorData.toString()
-
-                            Log.d("PROBLEMA", errorData.toString() )
-                        }
-                        else
-                        {
-                            problemaGeneral = textReponse;
-                        }
-
-                    }
-                    catch (e: Exception)
-                    {
-                        Log.d("EXEP", e.message.toString())
-                    }
-
-
-                    view?.findViewById<TextView>(R.id.lblProblema)?.text = problemaGeneral
-
-
                 }
 
+                var jsonObject = JSONObject()
+                var textReponse : String = call.errorBody()!!.charStream().readText()
+                textReponse = textReponse.replace("$", "")
+                Log.d("RESPONSE", textReponse )
+
+                var problemaGeneral : String = ""
+
+                try {
+
+                    try {
+                        /*Intenerar convertir a json si tiene formato*/
+                        JSONObject(textReponse)
+                    } catch (e: JSONException) {
+                        Log.d("PROBLEMA", "No es JSON" )
+                        /*Se mostrara el erros que venga*/
+                        problemaGeneral = textReponse;
+                        throw Exception("No es FORMATO JSON")
+                    }
+
+                    /*Convertir a tipo ErrorResponse*/
+                    if (JSONObject(textReponse).has("errors"))
+                    {
+                        var myObjet = Gson().fromJson(textReponse, ErrorResponse::class.java)
+
+                        var errorData = JSONObject(myObjet.errors.toString())
+
+                        problemaGeneral = errorData.toString()
+
+                        Log.d("PROBLEMA", errorData.toString() )
+                    }
+                    else
+                    {
+                        problemaGeneral = textReponse;
+                    }
+
+                }
+                catch (e: Exception)
+                {
+                    Log.d("EXEP", e.message.toString())
+                }
+
+                withContext(Dispatchers.Main) {
+                    view?.findViewById<TextView>(R.id.lblProblema)?.text = problemaGeneral
+                    commMain.showLoadingBar(false)
+                }
 
             }
 
