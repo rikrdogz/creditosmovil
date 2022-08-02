@@ -15,6 +15,7 @@ import com.example.firstapp.pagos.PagoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -39,6 +40,8 @@ class PagosFragment : Fragment() {
     private  var inputIdPagoRealizado: Int =0
     private var creditoApp = MainActivity()
 
+    private  lateinit var commMain: MainCommunicator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -59,6 +62,7 @@ class PagosFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
+        commMain = requireActivity() as MainCommunicator
 
         return inflater.inflate(R.layout.fragment_pagos, container, false)
     }
@@ -93,39 +97,47 @@ class PagosFragment : Fragment() {
     fun obtenerPagos() {
         CoroutineScope(Dispatchers.IO).launch {
 
+            withContext(Dispatchers.Main)
+            {
+                commMain.showLoadingBar(true)
+            }
+
             try {
                 Log.d("API", inputIdCredito.toString())
 
                 val call =getPagosRetrofit().create(ApiPagoService::class.java).obtenerpagos(inputIdCredito)
                 Log.d("DATOS", "----------OTENIENDO------------")
 
+                val pagos  = call.body().orEmpty()
+                if (call.isSuccessful){
+                    //show
+                    withContext(Dispatchers.Main) {
 
-                activity?.runOnUiThread() {
-                    val pagos  = call.body().orEmpty()
-                    if (call.isSuccessful){
-                        //show
                         listaPagosMuteable.clear()
-
                         pagos.forEach { pagoModel -> listaPagosMuteable.add(pagoModel)  }
-
                         adaptarPagos.notifyDataSetChanged()
 
-                        Log.d("LISTA", "HAY DATOS ${pagos.size}")
-                        //Log.d("LISTA", "Nombre ${pagos[0].nombre}")
-                    }
-                    else {
-                        Log.d("LISTA", "NOO DATOS ${pagos.size}")
-                        //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
                     }
 
 
+                    Log.d("LISTA", "HAY DATOS ${pagos.size}")
+                    //Log.d("LISTA", "Nombre ${pagos[0].nombre}")
                 }
+                else {
+                    Log.d("LISTA", "NOO DATOS ${pagos.size}")
+                    //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
+                }
+
             }
 
             catch (e: Exception) {
                 Log.d("Error Problema", e.message.toString())
             }
 
+            withContext(Dispatchers.Main)
+            {
+                commMain.showLoadingBar(false)
+            }
 
         }
     }
