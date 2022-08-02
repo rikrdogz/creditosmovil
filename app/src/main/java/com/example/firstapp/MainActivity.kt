@@ -20,7 +20,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.firstapp.clientes.ClienteComunicator
 import com.example.firstapp.clientes.ClienteModel
 import com.example.firstapp.databinding.ActivityMainBinding
-import com.example.firstapp.databinding.ContentMainBinding
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity(), ClienteComunicator, MainCommunicator {
@@ -91,10 +90,12 @@ class MainActivity : AppCompatActivity(), ClienteComunicator, MainCommunicator {
         {
 
             BarraDeProgreso?.visibility = View.VISIBLE
+            Log.d("BARRA", "is visible")
         }
         else
         {
             BarraDeProgreso?.visibility  = View.GONE
+            Log.d("BARRA","is Gone")
         }
 
     }

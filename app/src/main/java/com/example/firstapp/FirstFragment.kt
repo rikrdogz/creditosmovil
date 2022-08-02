@@ -16,8 +16,10 @@ import com.example.firstapp.databinding.FragmentFirstBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.coroutines.CoroutineContext
 
 
 /**
@@ -54,9 +56,10 @@ class FirstFragment : Fragment() {
         commCliente =requireActivity() as ClienteComunicator
         commMain = requireActivity() as MainCommunicator
 
+
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
-        commMain.showLoadingBar(true);
+        //commMain.showLoadingBar(true);
 
         repo.statusText.observe(viewLifecycleOwner)  { it -> view?.findViewById<Button>(R.id.btnRecargar)?.text = it}
         repo.enableValueBoton.observe(viewLifecycleOwner) {it -> view?.findViewById<Button>(R.id.btnRecargar)?.isEnabled = it}
@@ -98,68 +101,81 @@ class FirstFragment : Fragment() {
 
             Log.d("data", "----------------CARGADO---------------")
         }
-        commMain.showLoadingBar(isLoading);
+
         repo.setEnableButton(!isLoading)
-        Log.d("data", "----------------${isLoading.toString()}---------------")
-
-
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun obtenerClientes() {
 
-        this.setLoadingInfo(true)
+        val respuesta = CoroutineScope(Dispatchers.IO).launch {
 
-        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main)
+            {
+                commMain.showLoadingBar(true)
+            }
 
             try {
+                setLoadingInfo(true)
                 val call =getClientesRetroFit().create(ApiCreditoService::class.java).getClientes("clientes")
                 Log.d("DATOS", "----------OTENIENDO------------")
 
+                val clientes  = call.body().orEmpty()
 
-                activity?.runOnUiThread() {
-                    val clientes  = call.body().orEmpty()
+                //Thread.sleep(1000)
 
-                    //Thread.sleep(1000)
-
-                    if (call.isSuccessful){
-                        //show
+                if (call.isSuccessful){
+                    //show
+                    withContext(Dispatchers.Main)
+                    {
                         listaCLientesMuteable.clear()
 
                         clientes.forEach { clienteModel -> listaCLientesMuteable.add(clienteModel)  }
 
                         adapterClientes.notifyDataSetChanged()
-
-
-                        Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
-                        Log.d("LISTA", "Nombre ${listaCLientesMuteable[0].nombre}")
-                    }
-                    else {
-                        showError()
-                        //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
                     }
 
-                    setLoadingInfo(false)
 
+
+                    Log.d("LISTA", "HAY DATOS ${listaCLientesMuteable.size}")
+                    Log.d("LISTA", "Nombre ${listaCLientesMuteable[0].nombre}")
                 }
+                else {
+                    showError()
+                    //Toast.makeText(this,"Sin Clientes", Toast.LENGTH_SHORT)
+                }
+
+                setLoadingInfo(false)
 
 
             }
 
             catch (e: Exception) {
                 Log.d("Error Problema", e.message.toString())
-
+                Log.d("INTENTO", "# $intentConection")
                 intentConection++
 
                 if (intentConection < 4)
                 {
-                    Toast.makeText(context, "intento # ${intentConection}", Toast.LENGTH_SHORT).show();
+                    withContext(Dispatchers.Main)
+                    {
+
+                        //Toast.makeText(activity, "intento # ${intentConection}", Toast.LENGTH_SHORT).show();
+                        Log.d("TOAST ENTRO", "SI")
+                    }
+
                     obtenerClientes()
                 }
                 setLoadingInfo(false)
+
             }
 
+            withContext(Dispatchers.Main)
+            {
+                commMain.showLoadingBar(false)
+                //Toast.makeText(context, "intento ", Toast.LENGTH_SHORT).show();
+            }
 
         }
 

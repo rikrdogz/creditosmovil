@@ -209,13 +209,11 @@ class ClienteInfoFragment : Fragment() {
 
     fun ObtenerInfoCliente(){
         Toast.makeText(context, inputIdCliente.toString(), Toast.LENGTH_SHORT).show()
-
-
-
+        commMain.showLoadingBar(true)
 
         Thread(Runnable {
             handler.post(Runnable {
-                commMain.showLoadingBar(true)
+
                 CoroutineScope(Dispatchers.IO).launch {
 
                     val call = pagoRetroFit().create(ApiPagoService::class.java).creditoActivo(inputIdCliente)
